@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using SatisfactionInfo.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SatisfactionInfo.Models.Repo.Interfaces;
+using SatisfactionInfo.Models.Repo.SQL;
 
 namespace SatisfactionInfo
 {
@@ -39,6 +41,9 @@ namespace SatisfactionInfo
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddTransient<IAnswersRepo, AnswersRepo>();
+            services.AddTransient<IVUserQuestionarieRepo, VUserQuestionarieRepo>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
