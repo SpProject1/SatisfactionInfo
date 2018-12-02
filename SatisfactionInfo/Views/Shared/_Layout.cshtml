@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+<!DOCTYPE html>
 <html lang="pl-PL">
 <head>
     <meta charset="utf-8" />
@@ -10,14 +12,22 @@
         <link href="~/css/info.css" rel="stylesheet" />
         <link href="~/css/site.css" rel="stylesheet" />
         <link href="~/css/customStyles.css" rel="stylesheet" />
+        <link href="~/css/grid.css" rel="stylesheet" />
     </environment>
     <environment exclude="Development">
         <link href="~/css/min/site.min.css" rel="stylesheet" asp-append-version="true" />
     </environment>
 </head>
 <body>
-    <partial name="_Nav" />
     <partial name="_CookieConsentPartial" />
+    <partial name="_Nav" />
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="padding5">
+            <a class="padding5 borderRight" asp-area="" asp-controller="Home" asp-action="Index">Start</a>
+            <a class="padding5 borderRight" asp-area="" asp-controller="Answers" asp-action="Index">Odpowiedzi</a>            
+        </div>
+    }
     <partial name="_Loader" />
     <div class="body-content">
         <partial name="_Info" />
@@ -27,7 +37,7 @@
             <p>&copy; @DateTime.Today.Year - WSEI #szkoła programowania</p>
         </footer>
     </div>
-    <script src="~/libs/jquery/jquery.min.js"></script>   
+    <script src="~/libs/jquery/jquery.min.js"></script>
     <script src="~/libs/jquery-lazyload/jquery.lazyload.js"></script>
     <script src="~/libs/jquery-lazyload/jquery.scrollstop.js"></script>
     <script src="~/libs/shufflejs/shuffle.min.js"></script>

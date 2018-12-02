@@ -1,0 +1,19 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profil";
+}
+
+<h4 class="center">@ViewData["Title"]</h4>
+
+<div class="center padding5">
+            <div asp-validation-summary="All" class="danger_txt"></div>
+            <div>
+                <label>Użytkownik:</label>
+                <input asp-for="Username" class="input_txt info_txt" disabled />
+            </div> 
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

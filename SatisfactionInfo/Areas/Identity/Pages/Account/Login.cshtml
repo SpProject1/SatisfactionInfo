@@ -1,0 +1,38 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Zaloguj się aby mieć więcej uprawnień";
+}
+
+<h2 class="center">@ViewData["Title"]</h2>
+<div class="center">
+
+    <form method="post">
+        <hr />
+        <div asp-validation-summary="All" class="danger_txt"></div>
+        <div class="inline">
+            <div class="label_def">
+                <label asp-for="Input.Email"></label>
+            </div>
+            <div>
+                <input asp-for="Input.Email" class="input_txt" />
+            </div>
+        </div>
+        <div class="inline">
+            <div class="label_def">
+                <label asp-for="Input.Password"></label>
+            </div>
+            <div>
+                <input asp-for="Input.Password" class="input_txt" />
+            </div>
+        </div>
+        <div class="right">
+            <button type="submit" class="button_def">Zaloguj</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

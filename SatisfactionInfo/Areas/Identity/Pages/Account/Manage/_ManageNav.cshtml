@@ -1,0 +1,7 @@
+﻿@inject SignInManager<IdentityUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<div><a class="left button_def fillWidth" id="change-password" asp-page="./ChangePassword">Zmień hasło</a></div>
+<div><a class="left button_def fillWidth" asp-page="./DeletePersonalData">Usuń konto</a></div>
+<div><a class="left button_def fillWidth" asp-page="../Register">Dodaj użytkownika</a></div>

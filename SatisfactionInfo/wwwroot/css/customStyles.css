@@ -9,13 +9,25 @@ hr{
 }
 label {
     font-family: Arial;
-    color: #3b3333;
-    margin:2px;
+    color: #3b3333;    
+ 
+}
+h1,h2,h3,h4,h5{
+    color:black;
+}
+input[type=checkbox] {
+    transform: scale(1.5);
+}
+.label_def {
+    padding: 7px;
+    margin: 3px;  
+    width: 100px;
+    max-height: 150px;
 }
 .body-content{
     padding: 0 15px 20px 15px;
     max-width: 900px;
-    min-width: 350px;
+    min-width: 330px;
     margin: auto;
 }
 .nav {
@@ -31,6 +43,9 @@ label {
     display: flex;
     align-items: center;
     justify-content: center
+}
+.centerH {   
+    border:red solid;
 }
     a {
     color: #80C342;
@@ -50,6 +65,10 @@ label {
 .right {
     float: right;
     right: 5px;
+}
+.left{
+    float: left;
+    left:5px;
 }
 
 .loader {
@@ -97,16 +116,63 @@ label {
         color: #80C342;
         background: white;
         transform:scale(0.97);
-    }      
-    .input_txt {
-        border: #80C342 1px solid;
-        border-radius: 2px;
-        outline: none;
-        padding: 7px;
-        margin: 2px;
     }
+.button_danger {
+    overflow: hidden;
+    border: 1px solid red;
+    color: red;
+    padding: 7px 9px 7px 9px;
+    margin: 2px;
+    background: #fedcdc;
+    border-radius: 2px;
+    outline: none;
+}
+    .button_danger:hover {
+        border: 1px solid red;
+        color: red;
+        background: white;
+    }
+
+    .button_danger:focus {
+        border: 1px solid red;
+        color: red;
+        background: white;
+        transform: scale(0.97);
+    }
+.input_txt {
+    border: #80C342 1px solid;
+    border-radius: 2px;
+    outline: none;
+    padding: 7px;
+    margin: 2px;
+}
     .input_txt:focus {
         box-shadow: 0px 0px 1px 0px #80C342;
         border: #80C342 2px solid;
         margin: 1px;
-    }
+    }   
+.fillWidth{
+      width:10em;      
+      text-align:center;
+}
+.danger_txt{
+    color:red;
+}
+.info_txt {
+    color: #32478d;
+}
+.success_txt {
+    color: #2f4d04;
+}
+.borderRight {
+    border-right: #e2fbe3 1px solid;
+}
+.borderLeft {
+    border-left: #e2fbe3 1px solid;    
+}
+.padding5{
+    padding:5px;
+}
+.inline > div {
+    display:inline-block;
+}

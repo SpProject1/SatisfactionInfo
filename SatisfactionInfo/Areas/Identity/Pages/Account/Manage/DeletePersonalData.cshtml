@@ -1,0 +1,27 @@
+﻿@page
+@model DeletePersonalDataModel
+@{
+    ViewData["Title"] = "Usuń dane personalne";
+    ViewData["ActivePage"] = ManageNavPages.DeletePersonalData;
+    ViewBag.ErrorMessage = "Usunięcie konta jest nieodwracalne.";
+}
+
+<h4 class="center">@ViewData["Title"]</h4> 
+
+<div class="center padding5">
+    <form id="delete-user" method="post" class="form-group">
+        <div asp-validation-summary="All" class="danger_txt"></div>
+        @if (Model.RequirePassword)
+        {
+        <div>
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password" class="input_txt" />          
+        </div>
+        }
+        <button class="button_danger right" type="submit">Usuń konto</button>
+    </form>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}
