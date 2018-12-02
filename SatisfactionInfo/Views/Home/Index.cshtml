@@ -1,13 +1,12 @@
 ﻿@model QuestionareCodeDTO
-@{
-    Layout = "_LayoutStart";
+@{     
     ViewData["Title"] = "Home Page";
 }
-@if (ViewBag.ErrMessage != null)
-{
-  <div class="alert alert-danger">@ViewBag.ErrMessage</div>
-}
- <form asp-action="StartQuestionarie">
-    <input asp-for="Code"  />
-    <button type="submit">Przejdź do ankiety</button>
-</form>
+  
+  <div class="center">
+      <form asp-action="StartQuestionarie">
+          <label asp-for="Code">Wprowadź kod ankiety:</label> <br />
+          <input asp-for="Code" class="input_txt" />
+          <button onclick="loader()" type="submit" class="button_def">Przejdź do ankiety</button>
+      </form>
+  </div>

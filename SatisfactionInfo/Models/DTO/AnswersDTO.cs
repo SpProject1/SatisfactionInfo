@@ -15,6 +15,8 @@ namespace SatisfactionInfo.Models.DTO
         [Required(ErrorMessage ="To pole jest wymagane")]
         //[DataType(DataType.Password)]
         public string Answer { get; set; }
+        public decimal? Weight { get; set; }
+        public string AnswerType { get; set; }
 
         public virtual ICollection<QuestionsAnswerDTO> QuestionsAnswerDTO { get; set; }
     }

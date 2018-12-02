@@ -9,7 +9,6 @@ namespace SatisfactionInfo.Models.Repo.Interfaces
 {
     public interface IVUserQuestionarieRepo
     {
-        Task<List<VUserQuestionarieDTO>> GetList();
-        Task<List<VUserQuestionarieDTO>> GetList(string code);
+       UserQuestionarieDTO Get(string code);
     }
 }

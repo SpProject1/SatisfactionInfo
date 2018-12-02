@@ -1,48 +1,147 @@
-/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
-for details on configuring this project to bundle and minify static web assets. */
-
 body {
-  padding-top: 50px;
-  padding-bottom: 20px;
+  font-family: Verdana,Arial, sans-serif;
+  font-size: 14px;
 }
 
-/* Wrapping element */
+hr {
+  border: none;
+  border-bottom: #e2fbe3 1px solid;
+  margin: 7px;
+}
 
-/* Set some basic padding to keep content from hitting the edges */
+label {
+  font-family: Arial;
+  color: #3b3333;
+}
 
 .body-content {
-  padding-left: 15px;
-  padding-right: 15px;
+  padding: 0 15px 20px 15px;
+  max-width: 1000px;
+  min-width: 350px;
+  margin: auto;
 }
 
-/* Carousel */
-
-.carousel-caption p {
-  font-size: 20px;
-  line-height: 1.4;
-}
-
-/* Make .svg files in the carousel display properly in older browsers */
-
-.carousel-inner .item img[src$=".svg"] {
+.nav {
+  top: 5px;
+  border-bottom: #e2fbe3 1px solid;
   width: 100%;
+  padding-bottom: 3px;
 }
 
-/* QR code generator */
-
-#qrCode {
-  margin: 15px;
+.hidden {
+  display: none;
 }
 
-/* Hide/rearrange for smaller screens */
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-@media screen and (max-width: 767px) {
-  /* Hide captions */
+a {
+  color: #80C342;
+  text-decoration: none;
+}
 
-  .carousel-caption {
-    display: none;
+a:hover {
+  color: black;
+  text-decoration: none;
+}
+
+.top {
+  top: 10px;
+  position: fixed;
+}
+
+.right {
+  float: left;
+  right: 5px;
+}
+
+.loader {
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: gray;
+  position: absolute;
+}
+
+.footer {
+  font-size: 12px;
+  font-family: Arial;
+  color: #808080;
+}
+
+.button_def {
+  overflow: hidden;
+  border: 1px solid #80C342;
+  color: white;
+  padding: 7px 9px 7px 9px;
+  margin: 2px;
+  background: #80C342;
+  border-radius: 2px;
+  outline: none;
+}
+
+.button_def:hover {
+  border: 1px solid #80C342;
+  color: #80C342;
+  background: white;
+}
+
+.button_def:focus {
+  border: 1px solid #80C342;
+  color: #80C342;
+  background: white;
+  transform: scale(0.97);
+}
+
+.input_txt {
+  border: #80C342 1px solid;
+  border-radius: 2px;
+  outline: none;
+  padding: 7px;
+  margin: 2px;
+}
+
+.input_txt:focus {
+  box-shadow: 0px 0px 1px 0px #80C342;
+  border: #80C342 2px solid;
+  margin: 1px;
+}
+.msg {
+  border-radius: 2px;
+  padding: 10px;
+  padding-top: 20px;
+  text-align: center;
+  margin: 15px 25% 15px 25%;
+  min-height: 29px;
+}
+
+@media screen and (max-width:700px) {
+  .msg {
+    margin: 15px;
   }
 }
+
+.danger_msg {
+  color: red;
+  border: #fac4c4 solid 1px;
+  background-color: #fedcdc;
+}
+
+.info_msg {
+  color: #32478d;
+  border: #b8e2f5 solid 1px;
+  background-color: #b8e2f5;
+}
+
+.success_msg {
+  color: #2f4d04;
+  border: rgb(218, 250, 189) solid 1px;
+  background-color: rgb(218, 250, 189);
+}
+
 body {
   padding-top: 50px;
   padding-bottom: 20px;

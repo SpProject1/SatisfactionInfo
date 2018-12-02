@@ -20,18 +20,24 @@ namespace SatisfactionInfo.Controllers
         }
         public IActionResult Index(string info = null)
         {           
-            ViewBag.ErrMessage = info;           
+            ViewBag.ErrorMessage = info;   
             return View();
         }
-        public async Task<IActionResult> StartQuestionarie(QuestionareCodeDTO item)
+        public IActionResult StartQuestionarie(QuestionareCodeDTO item)
         {
-            var questionarie = await vUserQuestionarieRepo.GetList(item.Code);
-            if (questionarie == null || questionarie.Count == 0)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", new { info = "Nie znaloziono ankiety" });
+                var questionarie = vUserQuestionarieRepo.Get(item.Code);
+                if (questionarie == null)
+                {
+                    return RedirectToAction(nameof(Index), new { info = "Nie znaloziono ankiety." });
+                }
+                return View("ShowQuestionarie", questionarie);
             }
-            return RedirectToAction("Index", new { info = "OK" });
-        }
+            else
+                return RedirectToAction(nameof(Index), new { info = "Wpisz lub wklej kod ankiety!" });
+
+        }      
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";

@@ -14,8 +14,10 @@ namespace SatisfactionInfo.Models.DTO
         public int Id { get; set; }
         public string Question { get; set; }
         public bool? AddWhy { get; set; }
+        public string AnswerType { get; set; }
 
         public virtual ICollection<QuestionariesQuestionDTO> QuestionariesQuestionDTO { get; set; }
         public virtual ICollection<QuestionsAnswerDTO> QuestionsAnswerDTO { get; set; }
+        public List<AnswersDTO> AnswersDTOs { get; set; }
     }
 }

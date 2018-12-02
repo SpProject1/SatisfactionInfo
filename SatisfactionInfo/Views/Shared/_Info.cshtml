@@ -1,0 +1,27 @@
+﻿
+@if (ViewBag.ErrorMessage != null)
+{
+<div class="msg danger_msg">
+    <div id="closeMsg" class="right fa fa-times-circle"></div>
+    @ViewBag.ErrorMessage          
+</div>
+}
+else if (ViewBag.InfoMessage != null)
+{
+    <div class="msg info_msg">
+        <div id="closeMsg" class="right fa  fa-times-circle"></div>
+        @ViewBag.InfoMessage   
+    </div>
+}
+else if (ViewBag.SuccessMessage != null)
+{
+    <div class="msg success_msg">
+        <div id="closeMsg" class="right fa fa-times-circle"></div>
+        @ViewBag.SuccessMessage    
+    </div>
+}
+else
+{
+    <div class="msg"></div>
+}
+    

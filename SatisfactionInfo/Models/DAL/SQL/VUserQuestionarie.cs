@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SatisfactionInfo.Models.DTO
+namespace SatisfactionInfo.Models.DAL.SQL
 {
-    public partial class VUserQuestionarieDTO
+    public partial class VUserQuestionarie
     {
         public int Id { get; set; }
         public string Name { get; set; }

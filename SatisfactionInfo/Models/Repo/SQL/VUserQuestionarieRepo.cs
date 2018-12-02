@@ -11,41 +11,34 @@ namespace SatisfactionInfo.Models.Repo.SQL
 {
     public class VUserQuestionarieRepo : IVUserQuestionarieRepo
     {
-        public async Task<List<VUserQuestionarieDTO>> GetList()
+        public UserQuestionarieDTO Get(string code)
         {
             using (SatisfactionInfoContext db = new SatisfactionInfoContext())
             {
-                return await db.VUserQuestionarie.Select(a => new VUserQuestionarieDTO
+                var questionaries = db.VUserQuestionarie.Where(a => a.Code.ToLower() == code.ToLower()).ToList();
+                if (questionaries != null && questionaries.Count != 0)
                 {
-                    Id = a.Id,
-                    AddWhy = a.AddWhy,
-                    Answer = a.Answer,
-                    AnswerType = a.AnswerType,
-                    Name = a.Name,
-                    Question = a.Question,
-                    Weight = a.Weight,
-                    Code = a.Code
-                }).ToListAsync();
-            }
-        }
+                    var result = new UserQuestionarieDTO();
+                    var questionsStrings = questionaries.Select(a => new { a.Question, a.AddWhy, a.AnswerType }).Distinct().ToList();
+                    result.Id = questionaries.First().Id;
+                    result.Name = questionaries.First().Name;
+                    result.Questions = questionsStrings.Select(a => new QuestionsDTO
+                    {
+                        Question = a.Question,
+                        AddWhy = a.AddWhy,
+                        AnswerType = a.AnswerType
+                    }).ToList();
+                    result.Questions.ForEach(q =>
+                    {
+                        q.AnswersDTOs = questionaries.Where(b => b.Question == q.Question).Select(c => new AnswersDTO
+                        {
+                            Answer = c.Answer                          
+                        }).ToList();
+                    });
 
-        public async Task<List<VUserQuestionarieDTO>> GetList(string code)
-        {
-            using (SatisfactionInfoContext db = new SatisfactionInfoContext())
-            {
-                return await db.VUserQuestionarie.Select(a => new VUserQuestionarieDTO
-                {
-                    Id = a.Id,
-                    AddWhy = a.AddWhy,
-                    Answer = a.Answer,
-                    AnswerType = a.AnswerType,
-                    Name = a.Name,
-                    Question = a.Question,
-                    Weight = a.Weight,
-                    Code = a.Code
-                })
-                .Where(a => a.Code.ToLower() == code.ToLower())
-                .ToListAsync();
+                    return result;
+                }
+                return null;
             }
         }
     }
