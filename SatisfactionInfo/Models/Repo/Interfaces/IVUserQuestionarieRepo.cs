@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace SatisfactionInfo.Models.Repo.Interfaces
 {
-    public interface IVUserQuestionarieRepo
+    public interface IVUserQuestionnarieRepo
     {
-       UserQuestionarieDTO Get(string code);
+        Task<UserQuestionnarieDTO> Get(string code);
     }
 }

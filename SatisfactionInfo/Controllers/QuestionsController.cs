@@ -11,9 +11,12 @@ namespace SatisfactionInfo.Controllers
 {
     public class QuestionsController : Controller
     {
-        private readonly SatisfactionInfoContext _context = new SatisfactionInfoContext();
+        private readonly SatisfactionInfoContext _context;
 
-       
+        public QuestionsController(SatisfactionInfoContext context)
+        {
+            _context = context;
+        }
 
         // GET: Questions
         public async Task<IActionResult> Index()

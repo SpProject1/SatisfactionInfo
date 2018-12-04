@@ -9,37 +9,48 @@ using System.Threading.Tasks;
 
 namespace SatisfactionInfo.Models.Repo.SQL
 {
-    public class VUserQuestionarieRepo : IVUserQuestionarieRepo
+    public class VUserQuestionnarieRepo : IVUserQuestionnarieRepo
     {
-        public UserQuestionarieDTO Get(string code)
-        {
-            using (SatisfactionInfoContext db = new SatisfactionInfoContext())
-            {
-                var questionaries = db.VUserQuestionarie.Where(a => a.Code.ToLower() == code.ToLower()).ToList();
-                if (questionaries != null && questionaries.Count != 0)
-                {
-                    var result = new UserQuestionarieDTO();
-                    var questionsStrings = questionaries.Select(a => new { a.Question, a.AddWhy, a.AnswerType }).Distinct().ToList();
-                    result.Id = questionaries.First().Id;
-                    result.Name = questionaries.First().Name;
-                    result.Questions = questionsStrings.Select(a => new QuestionsDTO
-                    {
-                        Question = a.Question,
-                        AddWhy = a.AddWhy,
-                        AnswerType = a.AnswerType
-                    }).ToList();
-                    result.Questions.ForEach(q =>
-                    {
-                        q.AnswersDTOs = questionaries.Where(b => b.Question == q.Question).Select(c => new AnswersDTO
-                        {
-                            Answer = c.Answer                          
-                        }).ToList();
-                    });
+        private readonly SatisfactionInfoContext db;
 
-                    return result;
-                }
-                return null;
+        public VUserQuestionnarieRepo(SatisfactionInfoContext db)
+        {
+            this.db = db;
+        }
+        public async Task<UserQuestionnarieDTO> Get(string code)
+        {
+            var questionnarie = await db.Questionnaries.Where(a => a.Code.ToLower() == code.ToLower()).FirstOrDefaultAsync();
+            if (questionnarie != null)
+            {
+                var questionnariesQuestion = await db.QuestionnariesQuestion.Where(a => a.QuestionnarieId == questionnarie.Id).ToListAsync();
+
+                var result = new UserQuestionnarieDTO();
+                result.Id = questionnarie.Id;
+                result.Name = questionnarie.Name;
+                result.Code = questionnarie.Code;
+                result.Questions = await db.Questions.Where(a => questionnariesQuestion.Any(b => b.QuestionId == a.Id)).Select(a => new QuestionsDTO
+                {
+                    Id = a.Id,
+                    AddWhy = a.AddWhy,
+                    AddWhyName = a.AddWhyName,
+                    AnswerType = a.AnswerType,
+                    Question = a.Question
+                }).ToListAsync();
+
+                result.Questions.ForEach(q =>
+                {
+                    var questionsAnswerDTO = db.QuestionsAnswer.Where(a => a.QuestionId == q.Id).ToList();
+                    q.AnswersDTOs = db.Answers.Where(a => questionsAnswerDTO.Any(b => b.AnswerId == a.Id)).Select(c => new AnswersDTO
+                    {
+                        Id = c.Id,
+                        Answer = c.Answer,
+                        Weight = c.Weight
+                    }).ToList();
+                });
+
+                return result;
             }
+            return null;
         }
     }
 }

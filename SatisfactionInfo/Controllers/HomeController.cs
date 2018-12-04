@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using SatisfactionInfo.Models;
 using SatisfactionInfo.Models.DTO;
@@ -12,27 +13,28 @@ namespace SatisfactionInfo.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IVUserQuestionarieRepo vUserQuestionarieRepo;
+        private readonly IVUserQuestionnarieRepo vUserQuestionnarieRepo;
 
-        public HomeController(IVUserQuestionarieRepo vUserQuestionarieRepo)
+        public HomeController(IVUserQuestionnarieRepo vUserQuestionnarieRepo)
         {
-            this.vUserQuestionarieRepo = vUserQuestionarieRepo;
+            this.vUserQuestionnarieRepo = vUserQuestionnarieRepo;
         }
         public IActionResult Index(string info = null)
         {           
             ViewBag.ErrorMessage = info;   
             return View();
         }
-        public IActionResult StartQuestionarie(QuestionareCodeDTO item)
+        public async Task<IActionResult> StartQuestionnarie(QuestionnareCodeDTO item)
         {
             if (ModelState.IsValid)
             {
-                var questionarie = vUserQuestionarieRepo.Get(item.Code);
+                var questionarie = await vUserQuestionnarieRepo.Get(item.Code);
                 if (questionarie == null)
                 {
                     return RedirectToAction(nameof(Index), new { info = "Nie znaloziono ankiety." });
                 }
-                return View("ShowQuestionarie", questionarie);
+                //questionarie.Url = Request.GetDisplayUrl() + (Request.GetDisplayUrl().EndsWith("StartQuestionnarie") ? $"/?code={item.Code}" : "");
+                return View("ShowQuestionnarie", questionarie);
             }
             else
                 return RedirectToAction(nameof(Index), new { info = "Wpisz lub wklej kod ankiety!" });

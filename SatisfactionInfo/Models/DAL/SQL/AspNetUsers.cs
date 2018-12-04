@@ -5,14 +5,6 @@ namespace SatisfactionInfo.Models.DAL.SQL
 {
     public partial class AspNetUsers
     {
-        public AspNetUsers()
-        {
-            AspNetUserClaims = new HashSet<AspNetUserClaims>();
-            AspNetUserLogins = new HashSet<AspNetUserLogins>();
-            AspNetUserRoles = new HashSet<AspNetUserRoles>();
-            AspNetUserTokens = new HashSet<AspNetUserTokens>();
-        }
-
         public string Id { get; set; }
         public string UserName { get; set; }
         public string NormalizedUserName { get; set; }
@@ -27,11 +19,6 @@ namespace SatisfactionInfo.Models.DAL.SQL
         public bool TwoFactorEnabled { get; set; }
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
-        public int AccessFailedCount { get; set; }
-
-        public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
-        public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
-        public virtual ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
-        public virtual ICollection<AspNetUserTokens> AspNetUserTokens { get; set; }
+        public int AccessFailedCount { get; set; }     
     }
 }

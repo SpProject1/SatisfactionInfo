@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SatisfactionInfo.Models.DTO
 {
-    public class QuestionareCodeDTO
+    public class QuestionnareCodeDTO
     {
         [Required]
         public string Code { get; set; }

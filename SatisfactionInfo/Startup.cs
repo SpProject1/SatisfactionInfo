@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SatisfactionInfo.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SatisfactionInfo.Data;
+using SatisfactionInfo.Models.DAL.SQL;
 using SatisfactionInfo.Models.Repo.Interfaces;
 using SatisfactionInfo.Models.Repo.SQL;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SatisfactionInfo
 {
@@ -39,11 +40,16 @@ namespace SatisfactionInfo
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddDbContext<SatisfactionInfoContext>(options =>
+               options.UseSqlServer(
+                   Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddTransient<IAnswersRepo, AnswersRepo>();
-            services.AddTransient<IVUserQuestionarieRepo, VUserQuestionarieRepo>();
+            services.AddTransient<IVUserQuestionnarieRepo, VUserQuestionnarieRepo>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -69,7 +75,7 @@ namespace SatisfactionInfo
             app.UseAuthentication();
 
             app.UseMvc(routes =>
-            {
+            {               
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

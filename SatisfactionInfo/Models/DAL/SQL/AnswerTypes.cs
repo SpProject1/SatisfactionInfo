@@ -9,7 +9,6 @@ namespace SatisfactionInfo.Models.DAL.SQL
         {
             Answers = new HashSet<Answers>();
         }
-
         public string AnswerType { get; set; }
 
         public virtual ICollection<Answers> Answers { get; set; }

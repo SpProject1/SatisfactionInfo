@@ -10,68 +10,60 @@ using System.Threading.Tasks;
 namespace SatisfactionInfo.Models.Repo.SQL
 {
     public class AnswersRepo : IAnswersRepo
-    {       
+    {
+        private readonly SatisfactionInfoContext db;
+
+        public AnswersRepo(SatisfactionInfoContext db)
+        {
+            this.db = db;
+        }
         public async Task<List<AnswersDTO>> GetList()
         {
-            using (SatisfactionInfoContext db = new SatisfactionInfoContext())
+            return await db.Answers
+            .Select(answer => new AnswersDTO
             {
-                    return await db.Answers
-                    .Select(answer => new AnswersDTO
-                    {
-                        Id = answer.Id,
-                        Answer = answer.Answer
-                    }).ToListAsync();
-            }
+                Id = answer.Id,
+                Answer = answer.Answer
+            }).ToListAsync();
+
         }
         public async Task<AnswersDTO> Get(int? id)
         {
-            using (SatisfactionInfoContext db = new SatisfactionInfoContext())
+            return await db.Answers
+            .Where(answer => answer.Id == id)
+            .Select(answer => new AnswersDTO
             {
-                return await db.Answers
-                .Where(answer => answer.Id == id)
-                .Select(answer => new AnswersDTO
-                {
-                    Id = answer.Id,
-                    Answer = answer.Answer
-                }).FirstOrDefaultAsync();
-            }
+                Id = answer.Id,
+                Answer = answer.Answer
+            }).FirstOrDefaultAsync();
         }
         public async Task Add(AnswersDTO item)
         {
-            using (SatisfactionInfoContext db = new SatisfactionInfoContext())
+            var answer = new Answers
             {
-                var answer = new Answers
-                {
-                    Id = item.Id,
-                    Answer = item.Answer
-                };
-                db.Answers.Add(answer);
-                await db.SaveChangesAsync();
-            }
+                Id = item.Id,
+                Answer = item.Answer
+            };
+            db.Answers.Add(answer);
+            await db.SaveChangesAsync();
         }
         public async Task Update(AnswersDTO item)
         {
-            using (SatisfactionInfoContext db = new SatisfactionInfoContext())
+            var answer = await db.Answers.FindAsync(item.Id);
+            if (answer != null)
             {
-                var answer = await db.Answers.FindAsync(item.Id);
-                if (answer != null)
-                {
-                    answer.Answer = item.Answer;
-                    db.Entry(answer).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    await db.SaveChangesAsync();
-                }                
+                answer.Answer = item.Answer;
+                db.Entry(answer).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                await db.SaveChangesAsync();
             }
         }
         public async Task Delete(int? id)
         {
-            using (SatisfactionInfoContext db = new SatisfactionInfoContext())
+            var answer = id != null ? await db.Answers.FindAsync(id) : null;
+            if (answer != null)
             {
-                var answer = id != null ? await db.Answers.FindAsync(id) : null;
-                if (answer != null)
-                {                    
-                    db.Entry(answer).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
-                    await db.SaveChangesAsync();
-                }
+                db.Entry(answer).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+                await db.SaveChangesAsync();
             }
         }
     }

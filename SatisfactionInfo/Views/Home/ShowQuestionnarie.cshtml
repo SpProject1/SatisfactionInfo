@@ -1,0 +1,81 @@
+﻿@model UserQuestionnarieDTO
+@{
+    ViewData["Title"] = "Ankieta";
+    string name = Model == null ? null : Model.Name;
+    int countColumns = 1;      
+}
+@if (Model != null)
+{
+    <div class="center"><h2>@name</h2></div>
+    if (Model.Questions != null && Model.Questions.Count > 0)
+    {
+         
+        string url = Url.RouteUrl("ankiety", new QuestionnareCodeDTO { Code = Model.Code });
+      
+        @*<h4>@Model.Url</h4>*@
+        <div class="contentRow">
+            @foreach (var question in Model.Questions)
+            {
+                <div class="section">
+                    <div class="section_header">@question.Question</div>
+                    <div class="section_content">
+
+                        @if (question.AnswerType == "jednokrotny")
+                        {
+                            <div class="center">
+                                @foreach (var answer in question.AnswersDTOs)
+                                {
+                                    <div class="section">
+                                        <lable>@answer.Answer</lable>
+                                        <input type="radio" name="decision" value="@answer.Weight" />
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else if (question.AnswerType == "wielokrotny")
+                        {
+                            <div class="center">
+                                @foreach (var answer in question.AnswersDTOs)
+                                {
+                                    <div class="section">
+                                        <lable>@answer.Answer</lable>
+                                        <input type="checkbox" name="decision" value="@answer.Weight" />
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else if (question.AnswerType == "numeryczny")
+                        {
+                            <div class="center grid">
+                                @foreach (var answer in question.AnswersDTOs)
+                                {
+                                    string col = $"col{countColumns++}";
+                                    <div class="@col">
+                                        <lable>@answer.Answer</lable>
+                                        <input class="input_number" type="number" name="decision" value="@answer.Weight" />
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        @if (question.AddWhy == true)
+                        {
+                            <div class="label_def">@question.AddWhyName:</div>
+                            <textarea rows="4" class="input_txt textarea"></textarea>
+                        }
+                    </div>
+                </div>
+
+            }
+        </div>
+    }
+
+    <div class="contentRow">
+        <button type="submit" class="button_def right">Wyślij</button>
+    </div>
+}
+else
+{
+    <div class="center"><h5>Brak danych do wyświetlenia</h5></div>
+}
+

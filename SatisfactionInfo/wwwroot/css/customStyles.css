@@ -2,52 +2,62 @@
     font-family: Verdana,Arial, sans-serif;
     font-size: 14px;
 }
-hr{
-    border:none;
-    border-bottom: #e2fbe3 1px solid;  
-    margin:7px;
+
+hr {
+    border: none;
+    border-bottom: #e2fbe3 1px solid;
+    margin: 7px;
 }
+
 label {
     font-family: Arial;
-    color: #3b3333;    
- 
+    color: #3b3333;
 }
-h1,h2,h3,h4,h5{
-    color:black;
+
+h1, h2, h3, h4, h5 {
+    color: black;
 }
-input[type=checkbox] {
+
+input[type=checkbox], input[type=radio] {
     transform: scale(1.5);
 }
+
 .label_def {
     padding: 7px;
-    margin: 3px;  
+    margin: 3px;
     width: 100px;
     max-height: 150px;
 }
-.body-content{
+
+.body-content {
     padding: 0 15px 20px 15px;
     max-width: 900px;
     min-width: 330px;
     margin: auto;
 }
+
 .nav {
     top: 5px;
     border-bottom: #e2fbe3 1px solid;
     width: 100%;
     padding-bottom: 3px;
 }
-.hidden{
-    display:none;
+
+.hidden {
+    display: none;
 }
+
 .center {
     display: flex;
     align-items: center;
     justify-content: center
 }
-.centerH {   
-    border:red solid;
+
+.centerH {
+    border: red solid;
 }
-    a {
+
+a {
     color: #80C342;
     text-decoration: none;
 }
@@ -59,43 +69,50 @@ input[type=checkbox] {
 
 .top {
     top: 10px;
-    position: fixed;
+    position: absolute;
 }
 
 .right {
     float: right;
     right: 5px;
 }
-.left{
+
+.left {
     float: left;
-    left:5px;
+    left: 5px;
 }
 
 .loader {
-    top:0;
+    top: 0;
     width: 100%;
     height: 100%;
     background: white;
-    position:absolute;
-    opacity:0.85;
+    position: absolute;
+    opacity: 0.85;
 }
-.loaderImage {    
+
+.loaderImage {
     margin-top: 20%;
     display: flex;
     align-items: center;
-    justify-content: center;    
+    justify-content: center;
 }
+
     .loaderImage:after {
         content: "Czekaj ...";
         font-size: 20px;
         color: #80C342;
-        display:block;
+        display: block;
     }
-    .footer {
-        font-size: 12px;
-        font-family: Arial;
-        color: #808080;
-    }
+
+.footer {
+    font-size: 12px;
+    font-family: Arial;
+    color: #808080;
+    position: relative;
+    margin-top: 20px;
+}
+
 .button_def {
     overflow: hidden;
     border: 1px solid #80C342;
@@ -106,17 +123,20 @@ input[type=checkbox] {
     border-radius: 2px;
     outline: none;
 }
+
     .button_def:hover {
         border: 1px solid #80C342;
         color: #80C342;
         background: white;
     }
+
     .button_def:focus {
         border: 1px solid #80C342;
         color: #80C342;
         background: white;
-        transform:scale(0.97);
+        transform: scale(0.97);
     }
+
 .button_danger {
     overflow: hidden;
     border: 1px solid red;
@@ -127,6 +147,7 @@ input[type=checkbox] {
     border-radius: 2px;
     outline: none;
 }
+
     .button_danger:hover {
         border: 1px solid red;
         color: red;
@@ -139,40 +160,90 @@ input[type=checkbox] {
         background: white;
         transform: scale(0.97);
     }
-.input_txt {
+
+.input_txt, .input_number {
     border: #80C342 1px solid;
     border-radius: 2px;
     outline: none;
     padding: 7px;
     margin: 2px;
 }
-    .input_txt:focus {
+
+    .input_txt:focus, .input_number:focus {
         box-shadow: 0px 0px 1px 0px #80C342;
         border: #80C342 2px solid;
         margin: 1px;
-    }   
-.fillWidth{
-      width:10em;      
-      text-align:center;
+    }
+
+.input_number {
+    max-width:100px;
 }
-.danger_txt{
-    color:red;
+
+.fillWidth {
+    width: 10em;
+    text-align: center;
 }
+
+.danger_txt {
+    color: red;
+}
+
 .info_txt {
     color: #32478d;
 }
+
 .success_txt {
     color: #2f4d04;
 }
+
 .borderRight {
     border-right: #e2fbe3 1px solid;
 }
+
 .borderLeft {
-    border-left: #e2fbe3 1px solid;    
+    border-left: #e2fbe3 1px solid;
 }
-.padding5{
-    padding:5px;
+
+.padding5 {
+    padding: 5px;
 }
+
 .inline > div {
-    display:inline-block;
+    display: inline-block;
+}
+
+.section {
+    border: solid 1px #9be08b;
+    border-radius: 2px;
+    box-shadow: 1px 1px 1px 0px #cbe9b3;
+    margin: 10px;
+    padding: 6px 3px 5px 3px;
+}
+
+.section_header {
+    border-bottom: solid 1px #9be08b;
+    background-color: #eeeeee;
+    padding: 10px;
+    box-shadow: 0px -3px 2px 3px #eeeeee;
+}
+
+.section_content {
+    padding: 10px;
+}
+
+.textarea {
+    width: 97%;
+    position: relative;
+    resize: vertical;
+    font-family: Verdana;
+}
+
+.loginBtn {
+    position: relative;
+}
+
+.contentRow {
+    min-height: 50px;
+    width: 100%;
+    position: relative;
 }

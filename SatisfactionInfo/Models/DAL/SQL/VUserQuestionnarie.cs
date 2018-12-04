@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SatisfactionInfo.Models.DAL.SQL
 {
-    public partial class VUserQuestionarie
+    public partial class VUserQuestionnarie
     {
         public int Id { get; set; }
         public string Name { get; set; }
