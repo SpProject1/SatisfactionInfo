@@ -50,6 +50,7 @@ namespace SatisfactionInfo
 
             services.AddTransient<IAnswersRepo, AnswersRepo>();
             services.AddTransient<IVUserQuestionnarieRepo, VUserQuestionnarieRepo>();
+            services.AddTransient<IUserQuestionnariesRepo, UserQuestionnariesRepo>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

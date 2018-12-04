@@ -17,6 +17,7 @@ namespace SatisfactionInfo.Models.DAL.SQL
         public string AddWhyName { get; set; }
         public bool? AddWhy { get; set; }
 
+        public virtual AnswerTypes AnswerTypeNavigation { get; set; }
         public virtual ICollection<QuestionnariesQuestion> QuestionnariesQuestion { get; set; }
         public virtual ICollection<QuestionsAnswer> QuestionsAnswer { get; set; }
     }

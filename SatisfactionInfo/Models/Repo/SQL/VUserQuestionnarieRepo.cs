@@ -17,14 +17,14 @@ namespace SatisfactionInfo.Models.Repo.SQL
         {
             this.db = db;
         }
-        public async Task<UserQuestionnarieDTO> Get(string code)
+        public async Task<FullQuestionnarieDTO> Get(string code)
         {
             var questionnarie = await db.Questionnaries.Where(a => a.Code.ToLower() == code.ToLower()).FirstOrDefaultAsync();
             if (questionnarie != null)
             {
                 var questionnariesQuestion = await db.QuestionnariesQuestion.Where(a => a.QuestionnarieId == questionnarie.Id).ToListAsync();
 
-                var result = new UserQuestionnarieDTO();
+                var result = new FullQuestionnarieDTO();
                 result.Id = questionnarie.Id;
                 result.Name = questionnarie.Name;
                 result.Code = questionnarie.Code;
@@ -45,6 +45,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
                         Id = c.Id,
                         Answer = c.Answer,
                         Weight = c.Weight
+
                     }).ToList();
                 });
 

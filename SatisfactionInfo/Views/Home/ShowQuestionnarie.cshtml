@@ -1,8 +1,9 @@
-﻿@model UserQuestionnarieDTO
+﻿@model FullQuestionnarieDTO
 @{
     ViewData["Title"] = "Ankieta";
     string name = Model == null ? null : Model.Name;
-    int countColumns = 1;      
+    int countColumns = 1;
+    int questionCount = 1;
 }
 @if (Model != null)
 {
@@ -17,7 +18,7 @@
             @foreach (var question in Model.Questions)
             {
                 <div class="section">
-                    <div class="section_header">@question.Question</div>
+                    <div class="section_header">#@(questionCount++) @question.Question</div>
                     <div class="section_content">
 
                         @if (question.AnswerType == "jednokrotny")

@@ -239,7 +239,7 @@ a {
 }
 
 .loginBtn {
-    position: relative;
+    position: absolute;
 }
 
 .contentRow {

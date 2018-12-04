@@ -9,6 +9,6 @@ namespace SatisfactionInfo.Models.Repo.Interfaces
 {
     public interface IVUserQuestionnarieRepo
     {
-        Task<UserQuestionnarieDTO> Get(string code);
+        Task<FullQuestionnarieDTO> Get(string code);
     }
 }

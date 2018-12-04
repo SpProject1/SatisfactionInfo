@@ -5,23 +5,23 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace SatisfactionInfo.Models.DAL.SQL
 {
     public partial class SatisfactionInfoContext : DbContext
-    {
+    {      
         public SatisfactionInfoContext(DbContextOptions<SatisfactionInfoContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Answers> Answers { get; set; }
-        public virtual DbSet<AnswerTypes> AnswerTypes { get; set; }   
+        public virtual DbSet<AnswerTypes> AnswerTypes { get; set; }
+        public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Questionnaries> Questionnaries { get; set; }
         public virtual DbSet<QuestionnariesQuestion> QuestionnariesQuestion { get; set; }
         public virtual DbSet<Questions> Questions { get; set; }
         public virtual DbSet<QuestionsAnswer> QuestionsAnswer { get; set; }
-        public virtual DbSet<UserAnswers> UserAnswers { get; set; }
-        public virtual DbSet<VUserQuestionnarie> VUserQuestionnarie { get; set; }
-
-     
+        public virtual DbSet<UserQuestionnarieAnswers> UserQuestionnarieAnswers { get; set; }
+        public virtual DbSet<UserQuestionnaries> UserQuestionnaries { get; set; }
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.0-preview3-35497");
@@ -34,7 +34,7 @@ namespace SatisfactionInfo.Models.DAL.SQL
                     .IsRequired()
                     .HasMaxLength(250);
 
-                entity.Property(e => e.Weight).HasColumnType("decimal(18, 2)");                               
+                entity.Property(e => e.Weight).HasColumnType("decimal(18, 2)");
             });
 
             modelBuilder.Entity<AnswerTypes>(entity =>
@@ -45,6 +45,17 @@ namespace SatisfactionInfo.Models.DAL.SQL
                 entity.Property(e => e.AnswerType)
                     .HasMaxLength(20)
                     .ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<AspNetUserClaims>(entity =>
+            {
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserClaims)
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<AspNetUsers>(entity =>
@@ -66,11 +77,13 @@ namespace SatisfactionInfo.Models.DAL.SQL
                 entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
 
                 entity.Property(e => e.UserName).HasMaxLength(256);
-            });           
+            });
 
             modelBuilder.Entity<Questionnaries>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Code).HasMaxLength(5);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -102,9 +115,18 @@ namespace SatisfactionInfo.Models.DAL.SQL
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.AddWhyName).HasMaxLength(250);
+
+                entity.Property(e => e.AnswerType).HasMaxLength(20);
+
                 entity.Property(e => e.Question)
                     .IsRequired()
                     .HasMaxLength(250);
+
+                entity.HasOne(d => d.AnswerTypeNavigation)
+                    .WithMany(p => p.Questions)
+                    .HasForeignKey(d => d.AnswerType)
+                    .HasConstraintName("FK_Questions_AnswerTypes");
             });
 
             modelBuilder.Entity<QuestionsAnswer>(entity =>
@@ -129,9 +151,31 @@ namespace SatisfactionInfo.Models.DAL.SQL
                     .HasConstraintName("FK_AnswerIDQuestion");
             });
 
-            modelBuilder.Entity<UserAnswers>(entity =>
+            modelBuilder.Entity<UserQuestionnarieAnswers>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AddWhyName).HasMaxLength(250);
+
+                entity.Property(e => e.AnswerType).HasMaxLength(20);
+
+                entity.Property(e => e.Code).HasMaxLength(5);
+
+                entity.Property(e => e.Question).HasMaxLength(250);
+
+                entity.Property(e => e.UserQuestionnarieId).HasColumnName("UserQuestionnarieID");
+
+                entity.HasOne(d => d.UserQuestionnarie)
+                    .WithMany(p => p.UserQuestionnarieAnswers)
+                    .HasForeignKey(d => d.UserQuestionnarieId)
+                    .HasConstraintName("FK_UserQuestionnarieAnswers_UserQuestionnaries");
+            });
+
+            modelBuilder.Entity<UserQuestionnaries>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Code).HasMaxLength(5);
 
                 entity.Property(e => e.Date).HasColumnType("datetime");
 

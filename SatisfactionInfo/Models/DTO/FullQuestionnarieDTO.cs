@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SatisfactionInfo.Models.DTO
 {
-    public partial class UserQuestionnarieDTO
+    public partial class FullQuestionnarieDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }  
