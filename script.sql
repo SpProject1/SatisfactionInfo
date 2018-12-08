@@ -1,6 +1,6 @@
 ﻿USE [SatisfactionInfo]
 GO
-/****** Object:  Table [dbo].[UserQuestionnarieAnswers]    Script Date: 04.12.2018 23:49:24 ******/
+/****** Object:  Table [dbo].[UserQuestionnarieAnswers]    Script Date: 08.12.2018 08:45:34 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9,7 +9,7 @@ CREATE TABLE [dbo].[UserQuestionnarieAnswers](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Code] [nvarchar](5) NULL,
 	[UserQuestionnarieID] [int] NULL,
-	[QuestionNomber] [int] NULL,
+	[QuestionNumber] [int] NULL,
 	[Question] [nvarchar](250) NULL,
 	[AvailableAnswers] [nvarchar](max) NULL,
 	[Answered] [nvarchar](max) NULL,
@@ -23,7 +23,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[UserQuestionnaries]    Script Date: 04.12.2018 23:49:25 ******/
+/****** Object:  Table [dbo].[UserQuestionnaries]    Script Date: 08.12.2018 08:45:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -39,20 +39,21 @@ CREATE TABLE [dbo].[UserQuestionnaries](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[VAnsweredQuestionnaries]    Script Date: 04.12.2018 23:49:25 ******/
+/****** Object:  View [dbo].[VAnsweredQuestionnaries]    Script Date: 08.12.2018 08:45:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE VIEW [dbo].[VAnsweredQuestionnaries]
 AS
-SELECT        dbo.UserQuestionnaries.Name, dbo.UserQuestionnaries.Date, dbo.UserQuestionnaries.Code, dbo.UserQuestionnaries.ID, dbo.UserQuestionnarieAnswers.QuestionNomber, dbo.UserQuestionnarieAnswers.Question, 
+SELECT        dbo.UserQuestionnaries.Name, dbo.UserQuestionnaries.Date, dbo.UserQuestionnaries.Code, dbo.UserQuestionnaries.ID, dbo.UserQuestionnarieAnswers.QuestionNumber, dbo.UserQuestionnarieAnswers.Question, 
                          dbo.UserQuestionnarieAnswers.AvailableAnswers, dbo.UserQuestionnarieAnswers.Answered, dbo.UserQuestionnarieAnswers.AnswerType, dbo.UserQuestionnarieAnswers.AddWhyName, 
                          dbo.UserQuestionnarieAnswers.AddWhy, dbo.UserQuestionnarieAnswers.AddWhyBody
 FROM            dbo.UserQuestionnarieAnswers INNER JOIN
                          dbo.UserQuestionnaries ON dbo.UserQuestionnarieAnswers.UserQuestionnarieID = dbo.UserQuestionnaries.ID
 GO
-/****** Object:  Table [dbo].[Answers]    Script Date: 04.12.2018 23:49:25 ******/
+/****** Object:  Table [dbo].[Answers]    Script Date: 08.12.2018 08:45:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -60,14 +61,13 @@ GO
 CREATE TABLE [dbo].[Answers](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Answer] [nvarchar](250) NOT NULL,
-	[Weight] [decimal](18, 2) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[QuestionsAnswer]    Script Date: 04.12.2018 23:49:25 ******/
+/****** Object:  Table [dbo].[QuestionsAnswer]    Script Date: 08.12.2018 08:45:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -82,7 +82,7 @@ CREATE TABLE [dbo].[QuestionsAnswer](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Questionnaries]    Script Date: 04.12.2018 23:49:25 ******/
+/****** Object:  Table [dbo].[Questionnaries]    Script Date: 08.12.2018 08:45:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -98,7 +98,7 @@ CREATE TABLE [dbo].[Questionnaries](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[QuestionnariesQuestion]    Script Date: 04.12.2018 23:49:25 ******/
+/****** Object:  Table [dbo].[QuestionnariesQuestion]    Script Date: 08.12.2018 08:45:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -106,6 +106,7 @@ GO
 CREATE TABLE [dbo].[QuestionnariesQuestion](
 	[QuestionnarieID] [int] NOT NULL,
 	[QuestionID] [int] NOT NULL,
+	[QuestionNumber] [int] NULL,
  CONSTRAINT [PK_QuestionnariesQuestion] PRIMARY KEY CLUSTERED 
 (
 	[QuestionID] ASC,
@@ -113,7 +114,7 @@ CREATE TABLE [dbo].[QuestionnariesQuestion](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Questions]    Script Date: 04.12.2018 23:49:25 ******/
+/****** Object:  Table [dbo].[Questions]    Script Date: 08.12.2018 08:45:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -130,11 +131,12 @@ CREATE TABLE [dbo].[Questions](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[VUserQuestionnarie]    Script Date: 04.12.2018 23:49:25 ******/
+/****** Object:  View [dbo].[VUserQuestionnarie]    Script Date: 08.12.2018 08:45:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -150,7 +152,6 @@ dbo.Questionnaries.Name,
 dbo.Questions.Question, 
 dbo.Questions.AddWhy,
 dbo.Answers.Answer, 
-dbo.Answers.Weight, 
 dbo.Questions.AnswerType, 
 dbo.Questionnaries.Code
 FROM     dbo.Questionnaries INNER JOIN
@@ -160,7 +161,21 @@ FROM     dbo.Questionnaries INNER JOIN
 		 left JOIN dbo.Answers ON dbo.QuestionsAnswer.AnswerID = dbo.Answers.ID
 						 
 GO
-/****** Object:  Table [dbo].[AnswerTypes]    Script Date: 04.12.2018 23:49:25 ******/
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 08.12.2018 08:45:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[__EFMigrationsHistory](
+	[MigrationId] [nvarchar](150) NOT NULL,
+	[ProductVersion] [nvarchar](32) NOT NULL,
+ CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED 
+(
+	[MigrationId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AnswerTypes]    Script Date: 08.12.2018 08:45:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -173,7 +188,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AspNetUserClaims]    Script Date: 04.12.2018 23:49:25 ******/
+/****** Object:  Table [dbo].[AspNetUserClaims]    Script Date: 08.12.2018 08:45:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -189,7 +204,7 @@ CREATE TABLE [dbo].[AspNetUserClaims](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AspNetUsers]    Script Date: 04.12.2018 23:49:25 ******/
+/****** Object:  Table [dbo].[AspNetUsers]    Script Date: 08.12.2018 08:45:35 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -552,3 +567,4 @@ End
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'VUserQuestionnarie'
 GO
+INSERT INTO [dbo].[AnswerTypes] ([AnswerType]) VALUES ('Jednokrotny'),('Numeryczny'),('Opisowy'),('Wielokrotny')
