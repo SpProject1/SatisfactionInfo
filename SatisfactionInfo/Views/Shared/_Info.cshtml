@@ -1,27 +1,27 @@
-﻿
-@if (ViewBag.ErrorMessage != null)
-{
-<div class="msg danger_msg">
-    <div id="closeMsg" class="right fa fa-times-circle"></div>
-    @ViewBag.ErrorMessage          
+﻿<div class="info">
+    @if (ViewBag.Info != null && ViewBag.Info.Type == InfoDTO.InfoType.Error)
+    {
+        <div class="msg danger_msg">
+            <div id="closeMsg" class="right fa fa-times-circle"></div>
+            @ViewBag.Info.Message
+        </div>
+    }
+    else if (ViewBag.Info != null && ViewBag.Info.Type == InfoDTO.InfoType.Info)
+    {
+        <div class="msg info_msg">
+            <div id="closeMsg" class="right fa  fa-times-circle"></div>
+            @ViewBag.Info.Message
+        </div>
+    }
+    else if (ViewBag.Info != null && ViewBag.Info.Type == InfoDTO.InfoType.Success)
+    {
+        <div class="msg success_msg">
+            <div id="closeMsg" class="right fa fa-times-circle"></div>
+            @ViewBag.Info.Message
+        </div>
+    }
+    else
+    {
+        <div class="msg"></div>
+    }  
 </div>
-}
-else if (ViewBag.InfoMessage != null)
-{
-    <div class="msg info_msg">
-        <div id="closeMsg" class="right fa  fa-times-circle"></div>
-        @ViewBag.InfoMessage   
-    </div>
-}
-else if (ViewBag.SuccessMessage != null)
-{
-    <div class="msg success_msg">
-        <div id="closeMsg" class="right fa fa-times-circle"></div>
-        @ViewBag.SuccessMessage    
-    </div>
-}
-else
-{
-    <div class="msg"></div>
-}
-    

@@ -11,8 +11,7 @@ namespace SatisfactionInfo.Models.DAL.SQL
         }
 
         public int Id { get; set; }
-        public string Answer { get; set; }
-        public decimal? Weight { get; set; }
+        public string Answer { get; set; }     
 
         public virtual ICollection<QuestionsAnswer> QuestionsAnswer { get; set; }
     }

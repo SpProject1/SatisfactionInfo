@@ -5,8 +5,8 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
-        <div class="right top loginBtn">
+    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm">
+        <div class="right loginBtn">
             <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Witaj @UserManager.GetUserName(User)!</a>              
             <button type="submit" class="button_def">Wyloguj</button>
         </div>
@@ -14,7 +14,7 @@
 }
 else
 {
-    <div class="right top loginBtn">      
-            <a class="button_def" asp-area="Identity" asp-page="/Account/Login">Zaloguj</a>
+    <div>      
+         <a class="loginBtn button_def" asp-area="Identity" asp-page="/Account/Login">Zaloguj</a>
     </div>
 }

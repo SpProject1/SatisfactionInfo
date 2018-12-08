@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SatisfactionInfo.Models;
 using SatisfactionInfo.Models.DTO;
@@ -14,50 +15,16 @@ namespace SatisfactionInfo.Controllers
     public class HomeController : Controller
     {
         private readonly IVUserQuestionnarieRepo vUserQuestionnarieRepo;
-        private readonly IUserQuestionnariesRepo userQuestionnariesRepo;
+        private readonly IUserQuestionnariesRepo userQuestionnariesRepo;     
 
         public HomeController(IVUserQuestionnarieRepo vUserQuestionnarieRepo, IUserQuestionnariesRepo userQuestionnariesRepo)
         {
             this.vUserQuestionnarieRepo = vUserQuestionnarieRepo;
-            this.userQuestionnariesRepo = userQuestionnariesRepo;
+            this.userQuestionnariesRepo = userQuestionnariesRepo;            
         }
-        public async Task<IActionResult> Index(string info = null)
+        public IActionResult Index(InfoDTO info = null)
         {
-            //userQuestionnariesRepo.Add(new UserQuestionnariesDTO
-            //{
-            //    Code = "aaaaa",
-            //    Name = "Próbna",
-            //    UserQuestionnarieAnswersDTOs = new List<UserQuestionnarieAnswersDTO>
-            //     {
-            //        new UserQuestionnarieAnswersDTO
-            //        {
-            //            Code = "aaaaa",
-            //            AddWhy = true,
-            //            AddWhyBody = "coś",
-            //            AddWhyName = "opis pola",
-            //            Answered = "1",
-            //            AnswerType = "jednokrotny",
-            //            AvailableAnswers="1;2;3",
-            //            Question = "czy tak?",
-            //            QuestionNomber = 1
-            //        },
-            //         new UserQuestionnarieAnswersDTO
-            //        {
-            //            Code = "aaaaa",
-            //            AddWhy = true,
-            //            AddWhyBody = "coś",
-            //            AddWhyName = "opis pola",
-            //            Answered = "2",
-            //            AnswerType = "jednokrotny",
-            //            AvailableAnswers="1;2;3",
-            //            Question = "czy tak?",
-            //            QuestionNomber = 2
-            //        }
-            //     }
-
-            //});
-            var x = await userQuestionnariesRepo.GetList("aaaaa");
-            ViewBag.ErrorMessage = info;
+            ViewBag.Info = info;
             return View();
         }
         public async Task<IActionResult> StartQuestionnarie(QuestionnareCodeDTO item)
@@ -67,13 +34,27 @@ namespace SatisfactionInfo.Controllers
                 var questionarie = await vUserQuestionnarieRepo.Get(item.Code);
                 if (questionarie == null)
                 {
-                    return RedirectToAction(nameof(Index), new { info = "Nie znaloziono ankiety." });
+                    return RedirectToAction(nameof(Index), new InfoDTO(InfoDTO.InfoType.Error, "Nie znaloziono ankiety."));
                 }
                 //questionarie.Url = Request.GetDisplayUrl() + (Request.GetDisplayUrl().EndsWith("StartQuestionnarie") ? $"/?code={item.Code}" : "");
+                int randomNumber = DateTime.Now.Second;
+                questionarie.Key = new Random(randomNumber).Next(1, int.MaxValue).ToString();
                 return View("ShowQuestionnarie", questionarie);
             }
             else
-                return RedirectToAction(nameof(Index), new { info = "Wpisz lub wklej kod ankiety!" });
+                return RedirectToAction(nameof(Index), new InfoDTO(InfoDTO.InfoType.Error, "Wpisz lub wklej kod ankiety!"));
+
+        }
+        [HttpPost]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> AddUserQuestionnarie(List<AnsweredDTO> model)
+        {
+            var result = await userQuestionnariesRepo.AddQuestionnarieAsync(model);
+            if (result == "success")
+            {
+                return Json(new { info = new InfoDTO(InfoDTO.InfoType.Success, "Twoja ankieta została zapisana! Dziękujemy.") });
+            }
+            return Json(new { info = new InfoDTO(InfoDTO.InfoType.Error, $"Nie udało się dodać ankiety.<br />{result}") });
 
         }
         public IActionResult About()

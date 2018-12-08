@@ -16,6 +16,8 @@ namespace SatisfactionInfo.Models.DTO
         public string AnswerType { get; set; }
         public bool? AddWhy { get; set; }        
         public string AddWhyName { get; set; }
+        public int QuestionNumber { get; set; }
+        public string AvailableAnswers { get; set; }
 
         public virtual ICollection<QuestionnariesQuestionDTO> QuestionnariesQuestionDTO { get; set; }
         public virtual ICollection<QuestionsAnswerDTO> QuestionsAnswerDTO { get; set; }

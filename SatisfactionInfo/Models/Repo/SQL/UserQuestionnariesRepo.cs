@@ -12,10 +12,12 @@ namespace SatisfactionInfo.Models.Repo.SQL
     public class UserQuestionnariesRepo : IUserQuestionnariesRepo
     {
         private readonly SatisfactionInfoContext db;
+        private readonly IVUserQuestionnarieRepo vUserQuestionnarieRepo;
 
-        public UserQuestionnariesRepo(SatisfactionInfoContext db)
+        public UserQuestionnariesRepo(SatisfactionInfoContext db, IVUserQuestionnarieRepo vUserQuestionnarieRepo)
         {
             this.db = db;
+            this.vUserQuestionnarieRepo = vUserQuestionnarieRepo;
         }
         public async Task Add(UserQuestionnariesDTO item)
         {
@@ -36,7 +38,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
             {
                 Code = a.Code,
                 UserQuestionnarieId = userQuestionnarieId,
-                QuestionNomber = a.QuestionNomber,
+                QuestionNumber = a.QuestionNumber,
                 Question = a.Question,
                 AvailableAnswers = a.AvailableAnswers,
                 AnswerType = a.AnswerType,
@@ -48,32 +50,95 @@ namespace SatisfactionInfo.Models.Repo.SQL
             await db.UserQuestionnarieAnswers.AddRangeAsync(answers);
             await db.SaveChangesAsync();
         }
+        public async Task<string> AddQuestionnarieAsync(List<AnsweredDTO> answers)
+        {
+            try
+            {
+                var userQuestionnarie = await vUserQuestionnarieRepo.Get(answers.First().Code);
+                //usuwanie nie potrzebnego
+                var toRemove = answers.Where(a => !userQuestionnarie.Questions.Any(q => q.QuestionNumber.ToString() == a.QuestionNumber)).ToList();
+                toRemove.ForEach(a => answers.Remove(a));
+
+                userQuestionnarie.UserQuestionnarie.Code = userQuestionnarie.Code;
+                userQuestionnarie.UserQuestionnarie.Name = userQuestionnarie.Name;
+                userQuestionnarie.Questions.ToList().ForEach(q =>
+                {
+                    var item = answers.Where(a => a.QuestionNumber == q.QuestionNumber.ToString()).FirstOrDefault();
+                    userQuestionnarie.UserQuestionnarie.UserQuestionnarieAnswersDTOs.Add(new UserQuestionnarieAnswersDTO
+                    {
+                        Code = userQuestionnarie.Code,
+                        Question = q.Question,
+                        QuestionNumber = q.QuestionNumber,
+                        AddWhy = q.AddWhy,
+                        AddWhyName = q.AddWhyName,
+                        AnswerType = q.AnswerType,
+                        AvailableAnswers = q.AvailableAnswers,
+                        Answered = item.Answered,
+                        AddWhyBody = item.AddWhyBody                        
+                    });                           
+                });
+                await Add(userQuestionnarie.UserQuestionnarie);
+                return "success";
+            }
+            catch (Exception exe)
+            {
+                return exe.Message;
+            }
+
+        }    
 
         public async Task<UserQuestionnariesDTO> Get(int id)
         {
             var result = await db.UserQuestionnaries
                 .Where(a => a.Id == id)
                 .Select(b => new UserQuestionnariesDTO
-            {
-                Code = b.Code,
-                Date = b.Date,
-                Id = b.Id,
-                Name = b.Name,
-                UserQuestionnarieAnswersDTOs = db.UserQuestionnarieAnswers.Select(a => new UserQuestionnarieAnswersDTO
                 {
-                    Id = a.Id,
-                    Code = a.Code,
-                    UserQuestionnarieId = a.UserQuestionnarieId,
-                    QuestionNomber = a.QuestionNomber,
-                    Question = a.Question,
-                    AvailableAnswers = a.AvailableAnswers,
-                    AnswerType = a.AnswerType,
-                    Answered = a.Answered,
-                    AddWhy = a.AddWhy,
-                    AddWhyBody = a.AddWhyBody,
-                    AddWhyName = a.AddWhyName
-                }).Where(c => c.UserQuestionnarieId == b.Id).ToList()
-            }).FirstOrDefaultAsync();
+                    Code = b.Code,
+                    Date = b.Date,
+                    Id = b.Id,
+                    Name = b.Name,
+                    UserQuestionnarieAnswersDTOs = db.UserQuestionnarieAnswers.Select(a => new UserQuestionnarieAnswersDTO
+                    {
+                        Id = a.Id,
+                        Code = a.Code,
+                        UserQuestionnarieId = a.UserQuestionnarieId,
+                        QuestionNumber = a.QuestionNumber,
+                        Question = a.Question,
+                        AvailableAnswers = a.AvailableAnswers,
+                        AnswerType = a.AnswerType,
+                        Answered = a.Answered,
+                        AddWhy = a.AddWhy,
+                        AddWhyBody = a.AddWhyBody,
+                        AddWhyName = a.AddWhyName
+                    }).Where(c => c.UserQuestionnarieId == b.Id).ToList()
+                }).FirstOrDefaultAsync();
+            return result;
+        }
+        public async Task<UserQuestionnariesDTO> Get(string code)
+        {
+            var result = await db.UserQuestionnaries
+                .Where(a => a.Code == code)
+                .Select(b => new UserQuestionnariesDTO
+                {
+                    Code = b.Code,
+                    Date = b.Date,
+                    Id = b.Id,
+                    Name = b.Name,
+                    UserQuestionnarieAnswersDTOs = db.UserQuestionnarieAnswers.Select(a => new UserQuestionnarieAnswersDTO
+                    {
+                        Id = a.Id,
+                        Code = a.Code,
+                        UserQuestionnarieId = a.UserQuestionnarieId,
+                        QuestionNumber = a.QuestionNumber,
+                        Question = a.Question,
+                        AvailableAnswers = a.AvailableAnswers,
+                        AnswerType = a.AnswerType,
+                        Answered = a.Answered,
+                        AddWhy = a.AddWhy,
+                        AddWhyBody = a.AddWhyBody,
+                        AddWhyName = a.AddWhyName
+                    }).Where(c => c.UserQuestionnarieId == b.Id).ToList()
+                }).FirstOrDefaultAsync();
             return result;
         }
 
@@ -85,38 +150,12 @@ namespace SatisfactionInfo.Models.Repo.SQL
                 Date = b.Date,
                 Id = b.Id,
                 Name = b.Name,
-                UserQuestionnarieAnswersDTOs = db.UserQuestionnarieAnswers.Select(a => new UserQuestionnarieAnswersDTO {
-                    Id= a.Id,
-                    Code = a.Code,
-                    UserQuestionnarieId = a.UserQuestionnarieId,
-                    QuestionNomber = a.QuestionNomber,
-                    Question = a.Question,
-                    AvailableAnswers = a.AvailableAnswers,
-                    AnswerType = a.AnswerType,
-                    Answered = a.Answered,
-                    AddWhy = a.AddWhy,
-                    AddWhyBody = a.AddWhyBody,
-                    AddWhyName = a.AddWhyName
-                }).Where(c => c.UserQuestionnarieId == b.Id).ToList()
-            }).ToListAsync();
-            return result;
-        }
-        public async Task<List<UserQuestionnariesDTO>> GetList(string code)
-        {
-            var result = await db.UserQuestionnaries
-                .Where(a => a.Code == code)
-                .Select(b => new UserQuestionnariesDTO
-            {
-                Code = b.Code,
-                Date = b.Date,
-                Id = b.Id,
-                Name = b.Name,
                 UserQuestionnarieAnswersDTOs = db.UserQuestionnarieAnswers.Select(a => new UserQuestionnarieAnswersDTO
                 {
                     Id = a.Id,
                     Code = a.Code,
                     UserQuestionnarieId = a.UserQuestionnarieId,
-                    QuestionNomber = a.QuestionNomber,
+                    QuestionNumber = a.QuestionNumber,
                     Question = a.Question,
                     AvailableAnswers = a.AvailableAnswers,
                     AnswerType = a.AnswerType,

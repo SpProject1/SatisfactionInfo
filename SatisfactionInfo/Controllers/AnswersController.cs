@@ -43,12 +43,12 @@ namespace SatisfactionInfo.Controllers
             {
                 return NotFound();
             }
-            var answer = await answersRepo.Get(id);
+            AnswersDTO answer = await answersRepo.Get(id);
             if (answer == null)
             {
                 return NotFound();
             }
-            return View(new AnswersDTO { Id = answer.Id, Answer = answer.Answer } );
+            return View(answer);
         }
 
         // POST: Answers1/Edit/5

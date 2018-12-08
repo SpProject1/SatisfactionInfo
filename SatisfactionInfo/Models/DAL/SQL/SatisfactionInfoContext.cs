@@ -33,8 +33,6 @@ namespace SatisfactionInfo.Models.DAL.SQL
                 entity.Property(e => e.Answer)
                     .IsRequired()
                     .HasMaxLength(250);
-
-                entity.Property(e => e.Weight).HasColumnType("decimal(18, 2)");
             });
 
             modelBuilder.Entity<AnswerTypes>(entity =>

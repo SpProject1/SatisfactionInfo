@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace SatisfactionInfo.Areas.Identity.Pages.Account
 {
@@ -17,11 +18,15 @@ namespace SatisfactionInfo.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IConfiguration configuration;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, IConfiguration configuration, UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            this.configuration = configuration;
+            this.userManager = userManager;
         }
 
         [BindProperty]
@@ -51,6 +56,21 @@ namespace SatisfactionInfo.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            var user = configuration["DefaultUser"];
+            var password = configuration["DefaultPassword"];
+            if (user != null && password != null)
+            {
+                IdentityUser admin = await userManager.FindByNameAsync(user);
+                if (admin == null)
+                {
+                    admin = new IdentityUser(user);
+                    try
+                    {
+                        await userManager.CreateAsync(admin, password);
+                    }
+                    catch { }
+                }
+            }
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);

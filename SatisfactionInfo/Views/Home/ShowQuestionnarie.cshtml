@@ -2,81 +2,96 @@
 @{
     ViewData["Title"] = "Ankieta";
     string name = Model == null ? null : Model.Name;
-    int countColumns = 1;
-    int questionCount = 1;
+    int questionNumber = Model.Questions.Count;
 }
-@if (Model != null)
-{
-    <div class="center"><h2>@name</h2></div>
-    if (Model.Questions != null && Model.Questions.Count > 0)
+<div id="questionnarieContent">
+    @if (Model != null)
     {
-         
-        string url = Url.RouteUrl("ankiety", new QuestionnareCodeDTO { Code = Model.Code });
-      
-        @*<h4>@Model.Url</h4>*@
-        <div class="contentRow">
-            @foreach (var question in Model.Questions)
-            {
-                <div class="section">
-                    <div class="section_header">#@(questionCount++) @question.Question</div>
-                    <div class="section_content">
+        <div class="center"><h2>@name</h2></div>         
+        @if (Model.Questions != null && Model.Questions.Count > 0)
+        {
+            <input type="hidden" id="questionnarieCode" value="@Model.Code" />
+            <input type="hidden" id="questionCount" value="@questionNumber" />
+            <input type="hidden" id="questions" value="" />
+            <script>
+                let questions = document.querySelector('#questions')
+            </script>
+            <div class="contentRow">
+                @foreach (var question in Model.Questions.OrderBy(a => a.QuestionNumber))
+                {
+                    questionNumber = question.QuestionNumber;
+                    <script>
 
-                        @if (question.AnswerType == "jednokrotny")
-                        {
-                            <div class="center">
-                                @foreach (var answer in question.AnswersDTOs)
-                                {
-                                    <div class="section">
-                                        <lable>@answer.Answer</lable>
-                                        <input type="radio" name="decision" value="@answer.Weight" />
-                                    </div>
-                                }
-                            </div>
-                        }
-                        else if (question.AnswerType == "wielokrotny")
-                        {
-                            <div class="center">
-                                @foreach (var answer in question.AnswersDTOs)
-                                {
-                                    <div class="section">
-                                        <lable>@answer.Answer</lable>
-                                        <input type="checkbox" name="decision" value="@answer.Weight" />
-                                    </div>
-                                }
-                            </div>
-                        }
-                        else if (question.AnswerType == "numeryczny")
-                        {
-                            <div class="center grid">
-                                @foreach (var answer in question.AnswersDTOs)
-                                {
-                                    string col = $"col{countColumns++}";
-                                    <div class="@col">
-                                        <lable>@answer.Answer</lable>
-                                        <input class="input_number" type="number" name="decision" value="@answer.Weight" />
-                                    </div>
-                                }
-                            </div>
-                        }
+                    questions.value += '@questionNumber;'
+                    </script>
+                    <div id="question_@questionNumber" class="section">
+                        <div class="section_header"><span id="required_@questionNumber">#@(questionNumber) @question.Question</span></div>
+                        <div class="section_content">
 
-                        @if (question.AddWhy == true)
-                        {
-                            <div class="label_def">@question.AddWhyName:</div>
-                            <textarea rows="4" class="input_txt textarea"></textarea>
-                        }
+                            @if (question.AnswerType.ToLower() == "jednokrotny")
+                            {
+                                <div class="center">
+                                    @foreach (var answer in question.AnswersDTOs)
+                                    {
+                                        <div class="section">
+                                            <lable>@answer.Answer</lable>
+                                            <input onclick="updateAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', null)" type="radio" name="decision" value="@answer.Answer" />
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else if (question.AnswerType.ToLower() == "wielokrotny")
+                            {
+                                <div class="center">
+                                    @foreach (var answer in question.AnswersDTOs)
+                                    {
+                                        <div class="section">
+                                            <lable>@answer.Answer</lable>
+                                            <input type="checkbox" onchange="updateAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', this)" value="@answer.Answer" />
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else if (question.AnswerType.ToLower() == "numeryczny")
+                            {
+                                <div class="center">
+                                    @foreach (var answer in question.AnswersDTOs)
+                                    {
+                                        <div>
+                                            <input id="numericAnswer_@questionNumber" oninput="updateSimlpeAnswer(@questionNumber, '#numericAnswer_@questionNumber')" class="input_number" type="number" />
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else if (question.AnswerType.ToLower() == "opisowy")
+                            {
+                                
+                                    @foreach (var answer in question.AnswersDTOs)
+                                    {
+                                  
+                                        <textarea id="descriptionAnswer_@questionNumber" oninput="updateSimlpeAnswer(@questionNumber, '#descriptionAnswer_@questionNumber')" rows="4" class="input_txt textarea"> </textarea>
+                                   
+                                    }
+                               
+                            }
+
+                            @if (question.AddWhy == true)
+                            {
+                                <div class="label_def">@question.AddWhyName:</div>
+                                <textarea oninput="updateAddWhyBody(@questionNumber)" id="addWhyBody_@questionNumber" rows="4" class="input_txt textarea"></textarea>
+                            }
+                        </div>
                     </div>
-                </div>
+                }
+            </div>
+            <div class="contentRow">
+                <button id="sendBtn" type="button" onclick="sendQuestionnarie()" class="button_def right">Wyślij</button>
+            </div>
 
-            }
-        </div>
+        }
     }
-
-    <div class="contentRow">
-        <button type="submit" class="button_def right">Wyślij</button>
-    </div>
-}
-else
-{
-    <div class="center"><h5>Brak danych do wyświetlenia</h5></div>
-}
-
+    else
+    {
+        <div class="center"><h5>Brak danych do wyświetlenia</h5></div>
+    } 
+</div>

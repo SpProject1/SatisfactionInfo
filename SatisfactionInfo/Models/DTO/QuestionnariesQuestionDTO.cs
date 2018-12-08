@@ -7,6 +7,7 @@ namespace SatisfactionInfo.Models.DTO
     {
         public int QuestionId { get; set; }
         public int QuestionnarieId { get; set; }
+        public int QuestionNumber { get; set; }
 
         public virtual QuestionsDTO QuestionDTO { get; set; }
         public virtual QuestionnariesDTO QuestionnarieDTO { get; set; }

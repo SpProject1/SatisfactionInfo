@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SatisfactionInfo.Data;
 using SatisfactionInfo.Models.DAL.SQL;
+using SatisfactionInfo.Models.DTO;
 using SatisfactionInfo.Models.Repo.Interfaces;
 using SatisfactionInfo.Models.Repo.SQL;
 using System;
@@ -48,11 +49,13 @@ namespace SatisfactionInfo
                options.UseSqlServer(
                    Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddSingleton<IConfiguration>(Configuration);
+
             services.AddTransient<IAnswersRepo, AnswersRepo>();
             services.AddTransient<IVUserQuestionnarieRepo, VUserQuestionnarieRepo>();
             services.AddTransient<IUserQuestionnariesRepo, UserQuestionnariesRepo>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);             
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,7 +83,7 @@ namespace SatisfactionInfo
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            });           
         }
     }
 }
