@@ -258,3 +258,9 @@ a {
     color:red;
     font-size:14px;
 }
+#cookieConsent {
+    position: absolute;   
+    z-index:1000;
+    bottom: 0;
+    width:100%;
+}
