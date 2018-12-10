@@ -55,6 +55,15 @@ namespace SatisfactionInfo.Models.Repo.SQL
             try
             {
                 var userQuestionnarie = await vUserQuestionnarieRepo.Get(answers.First().Code);
+                if (userQuestionnarie.Active != true)
+                {
+                    return "Ta ankieta jest już nieaktywna, skontaktuj sie z administratorem.";
+                }
+                int questionariesCount = await GetQuestionnariesCount(answers.First().Code);
+                if (questionariesCount > userQuestionnarie.MaxAnswers)
+                {
+                    return "Za duzo odpowiedzi dla aktualej ankiety, skontaktuj sie z administratorem.";
+                }
                 //usuwanie nie potrzebnego
                 var toRemove = answers.Where(a => !userQuestionnarie.Questions.Any(q => q.QuestionNumber.ToString() == a.QuestionNumber)).ToList();
                 toRemove.ForEach(a => answers.Remove(a));
@@ -166,6 +175,11 @@ namespace SatisfactionInfo.Models.Repo.SQL
                 }).Where(c => c.UserQuestionnarieId == b.Id).ToList()
             }).ToListAsync();
             return result;
+        }
+
+        public async Task<int> GetQuestionnariesCount(string code)
+        {
+            return await db.UserQuestionnaries.Where(a => a.Code == code).Select(a => a.Code).CountAsync();
         }
     }
 }

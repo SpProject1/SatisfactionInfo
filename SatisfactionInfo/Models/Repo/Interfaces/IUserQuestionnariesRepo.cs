@@ -13,5 +13,6 @@ namespace SatisfactionInfo.Models.Repo.Interfaces
         Task<UserQuestionnariesDTO> Get(int id);       
         Task Add(UserQuestionnariesDTO item);
         Task<string> AddQuestionnarieAsync(List<AnsweredDTO> answers);
+        Task<int> GetQuestionnariesCount(string code);
     }
 }

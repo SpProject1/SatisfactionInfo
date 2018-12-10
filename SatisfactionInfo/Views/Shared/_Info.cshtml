@@ -1,12 +1,5 @@
 ﻿<div class="info">
-    @if (ViewBag.Info != null && ViewBag.Info.Type == InfoDTO.InfoType.Error)
-    {
-        <div class="msg danger_msg">
-            <div id="closeMsg" class="right fa fa-times-circle"></div>
-            @ViewBag.Info.Message
-        </div>
-    }
-    else if (ViewBag.Info != null && ViewBag.Info.Type == InfoDTO.InfoType.Info)
+    @if (ViewBag.Info != null && ViewBag.Info.Type == InfoDTO.InfoType.Info)
     {
         <div class="msg info_msg">
             <div id="closeMsg" class="right fa  fa-times-circle"></div>
@@ -20,8 +13,15 @@
             @ViewBag.Info.Message
         </div>
     }
+    else if (ViewBag.Info != null && ViewBag.Info.Type == InfoDTO.InfoType.Error)
+    {
+        <div class="msg danger_msg">
+            <div id="closeMsg" class="right fa fa-times-circle"></div>
+            @ViewBag.Info.Message
+        </div>
+    }
     else
     {
         <div class="msg"></div>
-    }  
+    }
 </div>

@@ -31,14 +31,14 @@ namespace SatisfactionInfo.Controllers
         {
             if (ModelState.IsValid)
             {
+                //AnswerTypes
                 var questionarie = await vUserQuestionnarieRepo.Get(item.Code);
                 if (questionarie == null)
                 {
                     return RedirectToAction(nameof(Index), new InfoDTO(InfoDTO.InfoType.Error, "Nie znaloziono ankiety."));
                 }
                 //questionarie.Url = Request.GetDisplayUrl() + (Request.GetDisplayUrl().EndsWith("StartQuestionnarie") ? $"/?code={item.Code}" : "");
-                int randomNumber = DateTime.Now.Second;
-                questionarie.Key = new Random(randomNumber).Next(1, int.MaxValue).ToString();
+                int randomNumber = DateTime.Now.Second;                
                 return View("ShowQuestionnarie", questionarie);
             }
             else
@@ -54,7 +54,7 @@ namespace SatisfactionInfo.Controllers
             {
                 return Json(new { info = new InfoDTO(InfoDTO.InfoType.Success, "Twoja ankieta została zapisana! Dziękujemy.") });
             }
-            return Json(new { info = new InfoDTO(InfoDTO.InfoType.Error, $"Nie udało się dodać ankiety.<br />{result}") });
+            return Json(new { info = new InfoDTO(InfoDTO.InfoType.Error, $"Nie udało się dodać ankiety. {result}") });
 
         }
         public IActionResult About()

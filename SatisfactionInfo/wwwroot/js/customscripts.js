@@ -85,10 +85,7 @@ function sendQuestionnarie() {
         return;
     }
     else
-        toggleInfo();
-    
-    
-
+        toggleInfo();  
     $('#sendBtn').attr('disabled', 'disabled')
     $('#questionnarieContent').toggleClass('hidden')
     loader()
@@ -99,7 +96,7 @@ function sendQuestionnarie() {
             model: $.extend({}, model)
         },
         success: function (result) {
-            location.href = '/Home/?Type=Success&Message=' + result.info.message;
+            location.href = '/Home/?Type=' + result.info.type + '&Message=' + result.info.message;
             $('#sendBtn').removeAttr('disabled')
         },
         error: function (e) {

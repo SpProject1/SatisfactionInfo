@@ -12,6 +12,9 @@ namespace SatisfactionInfo.Models.DTO
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Code { get; set; }
+        public bool Active { get; set; }
+        public int MaxAnswers { get; set; }
 
         public virtual ICollection<QuestionnariesQuestionDTO> QuestionnariesQuestionDTO { get; set; }
     }

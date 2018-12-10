@@ -28,6 +28,8 @@ namespace SatisfactionInfo.Models.Repo.SQL
                 result.Id = questionnarie.Id;
                 result.Name = questionnarie.Name;
                 result.Code = questionnarie.Code;
+                result.Active = questionnarie.Active;
+                result.MaxAnswers = questionnarie.MaxAnswers;
                 result.Questions = await db.Questions.Where(a => questionnariesQuestions.Any(b => b.QuestionId == a.Id)).Select(a => new QuestionsDTO
                 {
                     Id = a.Id,
