@@ -35,7 +35,7 @@
                                     {
                                         <div class="section">
                                             <lable>@answer.Answer</lable>
-                                            <input onclick="updateAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', null)" type="radio" name="decision" value="@answer.Answer" />
+                                            <input onclick="updateTempAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', null)" type="radio" name="decision" value="@answer.Answer" />
                                         </div>
                                     }
                                 </div>
@@ -47,7 +47,7 @@
                                     {
                                         <div class="section">
                                             <lable>@answer.Answer</lable>
-                                            <input type="checkbox" onchange="updateAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', this)" value="@answer.Answer" />
+                                            <input type="checkbox" onchange="updateTempAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', this)" value="@answer.Answer" />
                                         </div>
                                     }
                                 </div>

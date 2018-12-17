@@ -1,0 +1,50 @@
+﻿@model IEnumerable<UserQuestionnariesDTO>
+
+    @foreach (var questionnarie in Model)
+    {
+    <tr>
+        <td>
+            <a id="rowToggle_@questionnarie.Id" href="#" class="fa fa-2x fa-angle-down text_def" onclick="toggleRow('#row_questions_@questionnarie.Id','#rowToggle_@questionnarie.Id')"></a>
+        </td>
+        <td>@questionnarie.Name</td>
+        <td>@questionnarie.Code</td>
+        <td>@questionnarie.Date</td>
+        <td>
+            <p class="displayHref" dis>
+                <a asp-controller="Home"
+                   asp-action="StartQuestionnarie"
+                   asp-route-code="@questionnarie.Code"
+                   asp-protocol="https">Link</a>
+            </p>
+        </td>
+    </tr>
+    <tr id="row_questions_@questionnarie.Id" class="hidden">
+        <td colspan="5">
+            @foreach (var answer in questionnarie.UserQuestionnarieAnswersDTOs)
+            {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Numer Pytania</th>
+                        <th>Pytanie</th>
+                        <th>Dostępne odpowiedzi</th>
+                        <th>Odpowiedź</th>
+                        <th>Nazwa pola tekstowego</th>
+                        <th>Pola tekstowego</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@answer.QuestionNumber</td>
+                        <td>@answer.Question</td>
+                        <td>@answer.AvailableAnswers</td>
+                        <td>@answer.Answered</td>
+                        <td>@answer.AddWhyName</td>
+                        <td>@answer.AddWhyBody</td>
+                    </tr>
+                </tbody>
+            </table>
+            }
+        </td>
+    </tr>
+   }

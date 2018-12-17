@@ -1,0 +1,32 @@
+﻿@model IEnumerable<UserQuestionnariesDTO>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nazwa</th>
+                <th>Kod</th>
+                <th>Data wysłania</th>
+                <th>Link</th>
+            </tr>
+            <tr>
+                <th>
+                    <div class="inline">
+                        <button id="buttonClearFilter" class="button_def" onclick="clearFilter()">Czyść</button>
+                        <button id="buttonUpdateFilter" class="button_def" onclick="updateFilter()">Filtruj</button>
+                    </div>
+                </th>
+                <th><input id="filterName" type="text" class="input_txt" oninput="showUpdateFilter()" /></th>
+                <th><input id="filterCode" type="text" class="input_txt" oninput="showUpdateFilter()" /></th>
+                <th><input id="filterDate" type="date" class="input_txt" oninput="showUpdateFilter()" /></th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody id="questionnaries">
+            <partial name="_Questionnaries" model="Model" />
+        </tbody>
+    </table>
+}

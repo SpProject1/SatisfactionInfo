@@ -147,9 +147,11 @@ namespace SatisfactionInfo.Models.Repo.SQL
             return result;
         }
 
-        public async Task<List<UserQuestionnariesDTO>> GetList()
+        public async Task<List<UserQuestionnariesDTO>> GetList(string code = null, string name = null, DateTime? date = null)
         {
-            var result = await db.UserQuestionnaries.Select(b => new UserQuestionnariesDTO
+            var toRemove = new List<UserQuestionnariesDTO>();            
+            var result = await db.UserQuestionnaries
+            .Select(b => new UserQuestionnariesDTO
             {
                 Code = b.Code,
                 Date = b.Date,
@@ -170,7 +172,21 @@ namespace SatisfactionInfo.Models.Repo.SQL
                     AddWhyName = a.AddWhyName
                 }).Where(c => c.UserQuestionnarieId == b.Id).ToList()
             }).ToListAsync();
-            return result;
+
+            if (code != null)
+            {
+                toRemove.AddRange(result.Where(a => !a.Code.ToLower().Contains(code.ToLower())).ToList());
+            }
+            if (name != null)
+            {
+                toRemove.AddRange(result.Where(a => !a.Name.ToLower().Contains(name.ToLower())).ToList());
+            }
+            if (date.HasValue)
+            {                
+                toRemove.AddRange(result.Where(a => a.Date.Value.Date != date.Value.Date).ToList());
+            }
+            var excludeIds = new HashSet<int>(toRemove.Select(a => a.Id));
+            return result.Where(a => !excludeIds.Contains(a.Id)).ToList();
         }
 
         public async Task<int> GetQuestionnariesCount(string code)

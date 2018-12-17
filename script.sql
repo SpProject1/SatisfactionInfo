@@ -92,6 +92,7 @@ CREATE TABLE [dbo].[Questionnaries](
 	[Name] [nvarchar](50) NOT NULL,
 	[Code] [nvarchar](5) NULL,
 	[Active] [bit] NOT NULL,
+	MaxAnswers [int] Not NULL,
  CONSTRAINT [PK_Questionaries] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -106,7 +107,7 @@ GO
 CREATE TABLE [dbo].[QuestionnariesQuestion](
 	[QuestionnarieID] [int] NOT NULL,
 	[QuestionID] [int] NOT NULL,
-	[QuestionNumber] [int] NULL,
+	[QuestionNumber] [int] NULL,	
  CONSTRAINT [PK_QuestionnariesQuestion] PRIMARY KEY CLUSTERED 
 (
 	[QuestionID] ASC,
@@ -568,30 +569,6 @@ GO
 EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'VUserQuestionnarie'
 GO
 ------------------------------Dodatki------------------------------
-CREATE TRIGGER [dbo].[trgAferInsertGuid]
-  ON [dbo].[Questionnaries]
-  AFTER INSERT
-AS 
-BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
-	
-	declare @smalGuid varchar(5)
-	set @smalGuid = LEFT(NEWID() ,5)
 
-		while((select Count(Code) from [dbo].[Questionaries] where Code = @smalGuid) > 0)
-			begin
-				set @smalGuid = LEFT(NEWID() ,5)
-			end
-    update [dbo].[Questionaries]
-	set [dbo].[Questionaries].Code = @smalGuid
-	from inserted
-	where [dbo].[Questionaries].ID = inserted.ID
-		and [dbo].[Questionaries].Name = inserted.Name 
-END
-GO
-
-ALTER TABLE [dbo].[Questionnaries] ENABLE TRIGGER [trgAferInsertGuid]
 GO
 INSERT INTO [dbo].[AnswerTypes] ([AnswerType]) VALUES ('Jednokrotny'),('Numeryczny'),('Opisowy'),('Wielokrotny')

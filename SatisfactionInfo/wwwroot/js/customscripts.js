@@ -1,4 +1,20 @@
 ﻿let toDelete = -1; //Jakieś Id do usunięcia .
+
+function clearFilter() {
+    $('#filterName').val(null)
+    $('#filterCode').val(null)
+    $('#filterDate').val(null)
+    hide('#buttonUpdateFilter') 
+    updateFilter();
+}
+function showUpdateFilter() {
+    let name = $('#filterName').val()
+    let code = $('#filterCode').val()
+    let date = $('#filterDate').val()
+    if (name.length > 0 || code.length > 0 || date.length > 0) {       
+        show('#buttonUpdateFilter')
+    }
+}
 function togglechecked(id) {
     if ($(id).is(':checked')) {
         $(id).prop('checked', false);
@@ -74,7 +90,7 @@ $(document).ready(function () {
                 Answered: '',
                 AddWhyBody: ''
             }
-            model[questionNumber - 1] = item;
+            model[questionNumber - 1] = item;           
         }
     }
 });
@@ -90,17 +106,17 @@ function updateSimlpeAnswer(questionNumber, id) {
         removeRequired(questionNumber);
     }
 }
-function updateAnswer(questionNumber, answerType, answered, obj) {
+function updateTempAnswer(questionNumber, answerType, answered, obj) {
     model[questionNumber - 1].Answered = calculateAnswered(model[questionNumber - 1].Answered, answered, answerType, obj);
     if (model[questionNumber - 1].Answered.length > 0) {
         removeRequired(questionNumber);
-    }
+    }    
 }
 function calculateAnswered(currentVal, newVal, answerType, obj) {
-    if (answerType === "jednokrotny" || answerType === "numeryczny") {
+    if (answerType.toLowerCase() === "jednokrotny" || answerType.toLowerCase() === "numeryczny") {
         currentVal = newVal
     }
-    else if (answerType === "wielokrotny") {
+    else if (answerType.toLowerCase() === "wielokrotny") {
         if (obj != null && obj.checked) {
             currentVal += newVal + ';'
         }
@@ -499,6 +515,7 @@ function deleteQuestionnarie() {
         success: function (result) {
             if (result == 'success') {
                 $('#row_' + String(toDelete)).remove();
+                hide('#row_questions_' + String(toDelete));
                 hidePopup()
                 loader()
                 addInfo(2, 'Usunięto.');
@@ -508,7 +525,6 @@ function deleteQuestionnarie() {
                 loader()
                 addInfo(3, result);
             }
-
         },
         error: function (e) {
             addInfo(3, 'Nie udało się usunąć.');
@@ -615,4 +631,32 @@ function deleteQuestionnarieQuestion() {
             hidePopup()
         }
     });
+}
+function updateFilter() {
+    let name = $('#filterName').val();
+    let code = $('#filterCode').val();
+    let date = $('#filterDate').val();
+    loader()
+    $.ajax({
+        type: "GET",
+        url: '/UserQuestionnaries/GetFiltered',
+        data: {
+            name: name,
+            code: code,
+            date: date
+        },
+        success: function (result) {
+            if (result != 'Problem z pobraniem danych') {
+                $('#questionnaries').html(result)                
+            }
+            else {
+                addInfo(3, result);
+            }
+            loader()
+        },
+        error: function (e) {
+            addInfo(3, 'Nie udało się pobrać danych.');           
+            loader()           
+        }
+    });  
 }
