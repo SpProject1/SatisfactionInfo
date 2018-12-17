@@ -1,0 +1,47 @@
+﻿@model QuestionAnswerViewModel
+
+    <p class="center">Dostępne odpowiedzi w pytaniu</p>
+    <table id="answers_@Model.QuestionId" class="table">
+        <thead>
+            <tr>
+                <th>
+                    <button class="button_def" onclick="show('#addNewQuestionAnswer_@Model.QuestionId')">Dodaj odpowiedź</button>
+                </th>
+                <th>
+                    Odpowiedź
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="addNewQuestionAnswer_@Model.QuestionId" class="newRow hidden">
+                <td></td>
+                <td>
+                    <select id="questionAnswer_@Model.QuestionId" class="select" asp-items="ViewBag.AnswerId"></select>
+                </td>
+                <td>
+                    <div class="inline">
+                        <button id="addQABtn_@Model.QuestionId" class="button_def" onclick="addQuestionAnswer(@Model.QuestionId)">Zapisz</button>
+                        <button class="button_def" onclick="hide('#addNewQuestionAnswer_@Model.QuestionId')">Anuluj</button>
+                    </div>
+                </td>
+            </tr>
+            @foreach (var item in Model.List)
+            {   
+                ConfirmationDTO confirmationAnswer = new ConfirmationDTO { Id = $"confirmationAnswer_{@Model.QuestionId}", Function = "deleteQuestionAnswer" };
+                <partial name="_Confirmation" model="confirmationAnswer" />
+                <tr id="rowDetail_@(Model.QuestionId)_@item.AnswerId">
+                    <td></td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Answer.Answer)
+                    </td>
+                    <td>
+                        <div class="inline">
+                            <button class="button_danger" onclick="showPopup([@Model.QuestionId, @item.AnswerId],'#confirmationAnswer_@Model.QuestionId')">Usuń</button>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>

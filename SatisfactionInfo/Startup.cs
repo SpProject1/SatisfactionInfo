@@ -51,9 +51,8 @@ namespace SatisfactionInfo
 
             services.AddSingleton<IConfiguration>(Configuration);
 
-            services.AddTransient<IAnswersRepo, AnswersRepo>();
-            services.AddTransient<IVUserQuestionnarieRepo, VUserQuestionnarieRepo>();
-            services.AddTransient<IUserQuestionnariesRepo, UserQuestionnariesRepo>();
+            services.AddTransient<IAnswersRepo, AnswersRepo>();            
+            services.AddTransient<IUserQuestionnariesRepo, UserQuestionnariesRepo>(); 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);             
         }

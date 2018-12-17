@@ -1,0 +1,101 @@
+﻿@model IEnumerable<SatisfactionInfo.Models.DAL.SQL.Questions>
+<table id="questions" class="table">
+    <thead>
+        <tr>
+            <th class="width50">
+                <button class="button_def" onclick="show('#addNewQuestion')">Dodaj</button>
+            </th>
+            <th>
+                Pytanie
+            </th>
+            <th>
+                Nazwa pola tekstowego
+            </th>
+            <th>
+                Pole widoczne
+            </th>
+            <th>
+                Rodzaj odp
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="addNewQuestion" class="newRow hidden">
+            <td></td>
+            <td>
+                <textarea id="newQuestionQuestion" rows="1" class="input_txt textarea"></textarea>
+            </td>
+            <td>
+                <input id="newQuestionAddWhyName" type="text" class="input_txt" />
+            </td>
+            <td>
+                <input id="newQuestionAddWhy" type="checkbox" />
+            </td>
+            <td>
+                <select id="newQuestionAnswerType" class="select" asp-items="ViewBag.AnswerType"></select>
+            </td>
+            <td>
+                <div class="inline">
+                    <button id="addBtn" class="button_def" onclick="addQuestion()">Zapisz</button>
+                    <button class="button_def" onclick="hide('#addNewQuestion')">Anuluj</button>
+                </div>
+            </td>
+        </tr>
+        @foreach (var item in Model)
+        {
+            QuestionAnswerViewModel model = new QuestionAnswerViewModel { List = item.QuestionsAnswer.ToList(), QuestionId = item.Id };
+            string isChecked = item.AddWhy == true ? "checked" : "";
+            <tr id="row_@item.Id">
+                <td>
+                    <a id="rowToggle_@item.Id" href="#" class="fa fa-2x fa-angle-down text_def rows_toggle" onclick="toggleRow('#row_answers_@item.Id','#rowToggle_@item.Id')"></a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Question)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AddWhyName)
+                </td>
+                <td>
+                    <input id="editQuestionAddWhy_@item.Id" type="checkbox" @isChecked onclick="return false;" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AnswerTypeNavigation.AnswerType)
+                </td>
+                <td>
+                    <div class="inline">
+                        <button class="button_def" onclick="change('#row_@item.Id', '#editQuestion_@item.Id')">Edycja</button>
+                        <button class="button_danger" onclick="showPopup(@item.Id, '#confirmationQuestion')">Usuń</button>
+                    </div>
+                </td>
+            </tr>
+            <tr id="editQuestion_@item.Id" class="hidden">
+                <td></td>
+                <td>
+                    <textarea id="editQuestionQuestion_@item.Id" rows="1" class="input_txt textarea">@item.Question</textarea>
+                </td>
+                <td>
+                    <input id="editQuestionAddWhyName_@item.Id" type="text" class="input_txt" value="@item.AddWhyName" />
+                </td>
+                <td>
+                    <input id="editQuestionAddWhy_@item.Id" type="checkbox" @isChecked onclick="togglechecked('#editQuestionAddWhy_@item.Id')" />
+                </td>
+                <td>
+                    <select id="editQuestionAnswerType_@item.Id" class="select" asp-for="@item.AnswerTypeNavigation.AnswerType" asp-items="ViewBag.AnswerType"></select>
+                </td>
+                <td>
+                    <div class="inline">
+                        <button id="editBtn" class="button_def" onclick="updateQuestion(@item.Id)">Zapisz</button>
+                        <button class="button_def" onclick="change('#editQuestion_@item.Id','#row_@item.Id')">Anuluj</button>
+                    </div>
+                </td>
+            </tr>
+            <tr id="row_answers_@item.Id" class="hidden rows_answers">
+                <td></td>
+                <td id="qaTable_@item.Id" colspan="5">
+                    <partial name="_Answers" model="model" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

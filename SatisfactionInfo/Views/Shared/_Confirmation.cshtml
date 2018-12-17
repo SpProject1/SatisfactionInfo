@@ -1,0 +1,11 @@
+﻿@model ConfirmationDTO
+<div id="@Model.Id" class="hidden confirmation">
+    <div class="popup">
+        <p class="center">Czy na pewno chcesz usunąć?</p>
+        <hr />
+        <div class="center">
+            <button class="button_danger width100" onclick="@(Model.Function)()">Tak</button>
+            <button class="button_def width100" onclick="hide('#@Model.Id')">Anuluj</button>
+        </div>
+    </div>
+</div>

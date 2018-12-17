@@ -1,4 +1,4 @@
-﻿@model SatisfactionInfo.Models.DTO.AnswersDTO
+﻿@model SatisfactionInfo.Models.DAL.SQL.QuestionnariesQuestion
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,17 +6,18 @@
 
 <h2>Edit</h2>
 
-<h4>Answers</h4>
+<h4>QuestionnariesQuestion</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="QuestionnarieId" />
+            <input type="hidden" asp-for="QuestionId" />
             <div class="form-group">
-                <label asp-for="Answer" class="control-label"></label>
-                <input asp-for="Answer" class="form-control" />
-                <span asp-validation-for="Answer" class="text-danger"></span>
+                <label asp-for="QuestionNumber" class="control-label"></label>
+                <input asp-for="QuestionNumber" class="form-control" />
+                <span asp-validation-for="QuestionNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />

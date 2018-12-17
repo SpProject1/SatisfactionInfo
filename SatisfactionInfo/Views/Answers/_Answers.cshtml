@@ -1,0 +1,55 @@
+﻿@model IEnumerable<SatisfactionInfo.Models.DAL.SQL.Answers>
+<table id="answers" class="table">
+    <thead>
+        <tr>
+            <th class="width50">
+                <button class="button_def" onclick="show('#addNewAnswer')">Dodaj</button>
+            </th>
+            <th>
+                Odpowiedź
+            </th>             
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="addNewAnswer" class="newRow hidden">
+            <td></td>            
+            <td>
+                <input id="newAnswerAnswer" type="text" class="input_txt" />
+            </td>             
+            <td>
+                <div class="inline">
+                    <button id="addBtn" class="button_def" onclick="addAnswer()">Zapisz</button>
+                    <button class="button_def" onclick="hide('#addNewAnswer')">Anuluj</button>
+                </div>
+            </td>
+        </tr>
+        @foreach (var item in Model)
+        {             
+        <tr id="row_@item.Id">
+            <td></td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Answer)
+            </td>           
+            <td>
+                <div class="inline">
+                    <button class="button_def" onclick="change('#row_@item.Id','#editAnswer_@item.Id')">Edycja</button>
+                    <button class="button_danger" onclick="showPopup(@item.Id,'#confirmationAnswer')">Usuń</button>
+                </div>
+            </td>
+        </tr>
+        <tr id="editAnswer_@item.Id" class="hidden">
+            <td></td>           
+            <td>
+                <input id="editAnswerAnswer_@item.Id" type="text" class="input_txt" value="@item.Answer" />
+            </td>            
+            <td>
+                <div class="inline">
+                    <button id="editBtn" class="button_def" onclick="updateAnswer(@item.Id)">Zapisz</button>
+                    <button class="button_def" onclick="change('#editAnswer_@item.Id','#row_@item.Id')">Anuluj</button>
+                </div>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

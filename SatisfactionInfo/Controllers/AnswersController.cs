@@ -2,83 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SatisfactionInfo.Models.DTO;
-using SatisfactionInfo.Models.Repo.Interfaces;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using SatisfactionInfo.Models.DAL.SQL;
 
 namespace SatisfactionInfo.Controllers
 {
+    [Authorize]
     public class AnswersController : Controller
     {
-        private readonly IAnswersRepo answersRepo;
+        private readonly SatisfactionInfoContext _context;
 
-        public AnswersController(IAnswersRepo answersRepo)
+        public AnswersController(SatisfactionInfoContext context)
         {
-            this.answersRepo = answersRepo;
-        }
+            _context = context;
+        }        
         public async Task<IActionResult> Index()
         {
-            var model = await answersRepo.GetList();
-            return View(model);
-        }      
-        public IActionResult Create()
-        {
-            return View();
+            return View(await _context.Answers.OrderByDescending(a => a.Id).ToListAsync());
         }
-
-        [HttpPost]        
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Answer")] AnswersDTO item)
-        {
-            if (ModelState.IsValid)
-            {
-                await answersRepo.Add(item);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(item);
-        }
-        public async Task<IActionResult> Edit(int? id)
-        {            
-            if (id == null)
-            {
-                return NotFound();
-            }
-            AnswersDTO answer = await answersRepo.Get(id);
-            if (answer == null)
-            {
-                return NotFound();
-            }
-            return View(answer);
-        }
-
-        // POST: Answers1/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("Id,Answer")] AnswersDTO answersDTO)
-        {  
+        public async Task<IActionResult> AddOrUpdate(Answers item)
+        {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await answersRepo.Update(answersDTO);
-                }
-                catch (Exception)
-                {
-                    return View("Error");
-                }
-                return RedirectToAction(nameof(Index));
+                if (item.Id > 0)                
+                    _context.Update(item);                
+                else
+                    _context.Add(item);
+                await _context.SaveChangesAsync();
+                return PartialView("_Answers", await _context.Answers.OrderByDescending(a => a.Id).ToListAsync());
             }
-            return View(answersDTO);
+            return Content("Wypełnij wymagane pole");
         }
-        // POST: Answers1/Delete/5
-        [HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
         {
-            await answersRepo.Delete(id);
-            return RedirectToAction(nameof(Index));
+            var answers = await _context.Answers.FindAsync(id);
+            _context.Answers.Remove(answers);
+            await _context.SaveChangesAsync();
+            return Content("success");
         }
     }
 }

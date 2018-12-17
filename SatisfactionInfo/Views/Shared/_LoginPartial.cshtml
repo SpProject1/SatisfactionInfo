@@ -7,7 +7,7 @@
 {
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm">
         <div class="right loginBtn">
-            <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Witaj @UserManager.GetUserName(User)!</a>              
+            <a asp-area="Identity" asp-page="/Account/Manage/Index">Ustawienia</a>              
             <button type="submit" class="button_def">Wyloguj</button>
         </div>
 </form>

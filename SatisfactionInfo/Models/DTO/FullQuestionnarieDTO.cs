@@ -15,6 +15,7 @@ namespace SatisfactionInfo.Models.DTO
         public string Code { get; set; }
         public bool? Active { get; set; }
         public int MaxAnswers { get; set; }
+        public string ErrorMessage { get; set; }
         public List<QuestionsDTO> Questions { get; set; }
         public UserQuestionnariesDTO UserQuestionnarie { get; set; }
     }

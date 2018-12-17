@@ -1,0 +1,11 @@
+﻿@model IEnumerable<SatisfactionInfo.Models.DAL.SQL.Questionnaries>
+@{
+    ConfirmationDTO confirmationDTO = new ConfirmationDTO { Id = "confirmationQuestionnaries", Function = "deleteQuestionnarie" };
+}
+<partial name="_Confirmation" model="confirmationDTO" />
+<h4 class="center">Ankiety</h4>
+<section id="questionnariesTable">
+    <partial name="_Questionnaries" model="Model" />
+</section>
+
+

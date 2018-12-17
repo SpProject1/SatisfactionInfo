@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SatisfactionInfo.Models.DAL.SQL;
+using SatisfactionInfo.Models.DTO;
 
 namespace SatisfactionInfo.Controllers
 {
+    [Authorize]
     public class QuestionsController : Controller
     {
         private readonly SatisfactionInfoContext _context;
@@ -17,136 +20,88 @@ namespace SatisfactionInfo.Controllers
         {
             _context = context;
         }
-
-        // GET: Questions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Questions.ToListAsync());
+            ViewData["AnswerId"] = new SelectList(_context.Answers, "Id", "Answer");
+            ViewData["AnswerType"] = new SelectList(_context.AnswerTypes, "AnswerType", "AnswerType");
+            var model = _context
+                .Questions.OrderByDescending(a => a.Id)
+                .Include(q => q.AnswerTypeNavigation)
+                .Include(qa => qa.QuestionsAnswer)
+                .ThenInclude(a => a.Answer);
+            return View(await model.ToListAsync());
         }
-
-        // GET: Questions/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<PartialViewResult> _Answers(int questionId)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var questions = await _context.Questions
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (questions == null)
-            {
-                return NotFound();
-            }
-
-            return View(questions);
+            ViewBag.QuestionID = questionId;
+            var model = _context.QuestionsAnswer.Where(a => a.QuestionId == questionId).Include(a => a.Answer);
+            return PartialView(nameof(_Answers), await model.ToListAsync());
         }
 
-        // GET: Questions/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Questions/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Question,AddWhy")] Questions questions)
+        public async Task<IActionResult> AddOrUpdate(Questions item)
         {
+            ViewData["AnswerId"] = new SelectList(_context.Answers, "Id", "Answer");
+            ViewData["AnswerType"] = new SelectList(_context.AnswerTypes, "AnswerType", "AnswerType");
             if (ModelState.IsValid)
             {
-                _context.Add(questions);
+                if (item.Id > 0)
+                    _context.Update(item);
+                else
+                    _context.Add(item);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var model = _context
+                .Questions.OrderByDescending(a => a.Id)
+                .Include(q => q.AnswerTypeNavigation)
+                .Include(qa => qa.QuestionsAnswer)
+                .ThenInclude(a => a.Answer);
+                return PartialView("_Questions", await model.ToListAsync());
             }
-            return View(questions);
+            return Content("Wypełnij wszystkie wymagane pola");
         }
 
-        // GET: Questions/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var questions = await _context.Questions.FindAsync(id);
-            if (questions == null)
-            {
-                return NotFound();
-            }
-            return View(questions);
-        }
-
-        // POST: Questions/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Question,AddWhy")] Questions questions)
-        {
-            if (id != questions.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(questions);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!QuestionsExists(questions.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(questions);
-        }
-
-        // GET: Questions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var questions = await _context.Questions
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (questions == null)
-            {
-                return NotFound();
-            }
-
-            return View(questions);
-        }
-
-        // POST: Questions/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var questions = await _context.Questions.FindAsync(id);
+            if (_context.QuestionsAnswer.Any(a => a.QuestionId == id))
+                return Content("Nie mozna usunąć pytania - posiada odpowiedzi.");
+            var questions = await _context.Questions.FindAsync(id);            
             _context.Questions.Remove(questions);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Content("success");
         }
-
-        private bool QuestionsExists(int id)
+        [HttpPost]
+        public async Task<IActionResult> AddQuestionAnswer(QuestionsAnswer item)
         {
-            return _context.Questions.Any(e => e.Id == id);
+            ViewData["AnswerId"] = new SelectList(_context.Answers, "Id", "Answer");
+            ViewData["AnswerType"] = new SelectList(_context.AnswerTypes, "AnswerType", "AnswerType");
+            if (ModelState.IsValid)
+            {
+                if (!questionsAnswerExists(item.QuestionId, item.AnswerId))
+                {
+                    _context.Add(item);
+                    await _context.SaveChangesAsync();
+                    var model = new QuestionAnswerViewModel();
+                    model.List = await _context.QuestionsAnswer.Where(a => a.QuestionId == item.QuestionId).Include(q => q.Answer).ToListAsync();
+                    model.QuestionId = item.QuestionId;
+                    return PartialView("_Answers", model);
+                }
+                return Content("exists");
+
+            }
+            return Content("Wypełnij wszystkie wymagane pola");
+        }
+        [HttpDelete]//DeleteQuestionAnswer
+        public async Task<IActionResult> DeleteQuestionAnswer(QuestionsAnswer item)
+        {
+            var questionsAnswer = await _context.QuestionsAnswer.Where(a => a.AnswerId == item.AnswerId && a.QuestionId == a.QuestionId).FirstOrDefaultAsync();
+            _context.QuestionsAnswer.Remove(questionsAnswer);
+            await _context.SaveChangesAsync();
+            return Content("success");
+        }
+        private bool questionsAnswerExists(int qid, int aid)
+        {
+            return _context.QuestionsAnswer.Any(e => e.QuestionId == qid && e.AnswerId == aid);
         }
     }
 }

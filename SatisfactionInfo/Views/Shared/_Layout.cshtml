@@ -24,10 +24,12 @@
     <partial name="_Nav" />
     @if (SignInManager.IsSignedIn(User))
     {
-        <div class="padding5">
-            <a class="padding5 borderRight" asp-area="" asp-controller="Home" asp-action="Index">Start</a>
-            <a class="padding5 borderRight" asp-area="" asp-controller="Answers" asp-action="Index">Odpowiedzi</a>            
-        </div>
+    <div class="padding5">
+        <a class="padding5 borderRight" asp-area="" asp-controller="Home" asp-action="Index">Start</a>
+        <a class="padding5 borderRight" asp-area="" asp-controller="Questionnaries" asp-action="Index">Ankiety</a>
+        <a class="padding5 borderRight" asp-area="" asp-controller="Questions" asp-action="Index">Pytania</a>
+        <a class="padding5 borderRight" asp-area="" asp-controller="Answers" asp-action="Index">Odpowiedzi</a>
+    </div>
     }
     <partial name="_Loader" />
     <div class="body-content">

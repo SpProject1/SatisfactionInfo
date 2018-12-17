@@ -1,0 +1,80 @@
+﻿@model QuestionnarieQuestionsViewModel
+<table id="questions_@Model.QuestionnarieId" class="table">
+    <thead>
+        <tr>
+            <th class="width100">
+                <button class="button_def" onclick="show('#addNewQuestion_@Model.QuestionnarieId')">Dodaj pytanie</button>
+            </th>
+            <th>
+                Numer pytania
+            </th>
+            <th>
+                Pytanie
+            </th>
+            <th>
+                Rodzaj odp
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="addNewQuestion_@Model.QuestionnarieId" class="newRow hidden">
+            <td></td>
+            <td>
+                <input id="questionnarieQuestionQuestionNumber_@Model.QuestionnarieId" type="number" class="input_number" />
+            </td>
+            <td>
+                <select id="questionnarieQuestionQuestionId_@Model.QuestionnarieId" class="select" asp-items="ViewBag.QuestionId"></select>
+            </td>
+            <td></td>
+            <td>
+                <div class="inline">
+                    <button id="addQQBtn" class="button_def" onclick="addQuestionnarieQuestion(@Model.QuestionnarieId)">Zapisz</button>
+                    <button class="button_def" onclick="hide('#addNewQuestion')">Anuluj</button>
+                </div>
+            </td>
+        </tr>
+        @foreach (var item in Model.List)
+        {
+            ConfirmationDTO confirmationQuestion = new ConfirmationDTO { Id = $"confirmationQuestion_{@Model.QuestionnarieId}", Function = "deleteQuestionnarieQuestion" };
+            <partial name="_Confirmation" model="confirmationQuestion" />
+            <tr id="rowDetail_@(Model.QuestionnarieId)_@item.QuestionId">
+                <td></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuestionNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Question.Question)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Question.AnswerType)
+                </td>
+                <td>
+                    <div class="inline">
+                        <button class="button_def" onclick="change('#rowDetail_@(Model.QuestionnarieId)_@item.QuestionId', '#editQuestion_@(Model.QuestionnarieId)_@item.QuestionId')">Edycja</button>
+                        <button class="button_danger" onclick="showPopup([@Model.QuestionnarieId, @item.QuestionId], '#confirmationQuestion_@Model.QuestionnarieId')">Usuń</button>
+                    </div>
+                </td>
+            </tr>
+            <tr id="editQuestion_@(Model.QuestionnarieId)_@item.QuestionId" class="hidden">
+                <td></td>
+                <td>
+                    <input id="editQuestionQuestionNumber_@(Model.QuestionnarieId)_@item.QuestionId" type="number" class="input_number" value="@item.QuestionNumber" />
+                </td>
+                <td>
+                    <input type="hidden" id="editQuestionQuestionId_@(Model.QuestionnarieId)_@item.QuestionId" value="@item.QuestionId" />
+                    @Html.DisplayFor(modelItem => item.Question.Question)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Question.AnswerType)
+                </td>
+                <td>
+                    <div class="inline">
+                        <button id="editBtn" class="button_def" onclick="updateQuestionnarieQuestion(@Model.QuestionnarieId, @item.QuestionId)">Zapisz</button>
+                        <button class="button_def" onclick="change('#editQuestion_@(Model.QuestionnarieId)_@item.QuestionId','#rowDetail_@(Model.QuestionnarieId)_@item.QuestionId')">Anuluj</button>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

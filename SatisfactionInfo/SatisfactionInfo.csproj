@@ -23,17 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Answers\Create.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    <Content Update="Views\Answers\_Answers.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Answers\Delete.cshtml">
+    <Content Update="Views\Questionnaries\_Questions.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Answers\Details.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
-    <Content Update="Views\Answers\Edit.cshtml">
+    <Content Update="Views\Questions\_Answers.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

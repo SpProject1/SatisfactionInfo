@@ -13,13 +13,11 @@ using System.Threading.Tasks;
 namespace SatisfactionInfo.Controllers
 {
     public class HomeController : Controller
-    {
-        private readonly IVUserQuestionnarieRepo vUserQuestionnarieRepo;
+    {       
         private readonly IUserQuestionnariesRepo userQuestionnariesRepo;     
 
-        public HomeController(IVUserQuestionnarieRepo vUserQuestionnarieRepo, IUserQuestionnariesRepo userQuestionnariesRepo)
-        {
-            this.vUserQuestionnarieRepo = vUserQuestionnarieRepo;
+        public HomeController(IUserQuestionnariesRepo userQuestionnariesRepo)
+        {          
             this.userQuestionnariesRepo = userQuestionnariesRepo;            
         }
         public IActionResult Index(InfoDTO info = null)
@@ -32,12 +30,11 @@ namespace SatisfactionInfo.Controllers
             if (ModelState.IsValid)
             {
                 //AnswerTypes
-                var questionarie = await vUserQuestionnarieRepo.Get(item.Code);
-                if (questionarie == null)
+                var questionarie = await userQuestionnariesRepo.GetFull(item.Code);
+                if (questionarie == null || questionarie.ErrorMessage != null)
                 {
-                    return RedirectToAction(nameof(Index), new InfoDTO(InfoDTO.InfoType.Error, "Nie znaloziono ankiety."));
-                }
-                //questionarie.Url = Request.GetDisplayUrl() + (Request.GetDisplayUrl().EndsWith("StartQuestionnarie") ? $"/?code={item.Code}" : "");
+                    return RedirectToAction(nameof(Index), new InfoDTO(InfoDTO.InfoType.Error, questionarie.ErrorMessage ?? "Nie znaloziono ankiety."));
+                }                
                 int randomNumber = DateTime.Now.Second;                
                 return View("ShowQuestionnarie", questionarie);
             }
@@ -47,9 +44,9 @@ namespace SatisfactionInfo.Controllers
         }
         [HttpPost]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public async Task<IActionResult> AddUserQuestionnarie(List<AnsweredDTO> model)
+        public async Task<IActionResult> AddUserQuestionnarie(List<AnsweredDTO> item)
         {
-            var result = await userQuestionnariesRepo.AddQuestionnarieAsync(model);
+            var result = await userQuestionnariesRepo.AddQuestionnarieAsync(item);
             if (result == "success")
             {
                 return Json(new { info = new InfoDTO(InfoDTO.InfoType.Success, "Twoja ankieta została zapisana! Dziękujemy.") });
