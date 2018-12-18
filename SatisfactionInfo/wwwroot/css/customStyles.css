@@ -13,7 +13,9 @@ label {
     font-family: Arial;
     color: #3b3333;
 }
-
+select{
+    max-width:500px;
+}
 h1, h2, h3, h4, h5 {
     color: black;
 }
@@ -33,7 +35,7 @@ input[type=checkbox], input[type=radio] {
 
 .body-content {
     padding: 0 15px 20px 15px;
-    max-width: 900px;
+    max-width: 1000px;
     min-width: 330px;
     margin: auto;
 }
@@ -50,15 +52,20 @@ input[type=checkbox], input[type=radio] {
 }
 
 .center {
-    display: flex;
-    align-items: center;
+    display: flex;   
     justify-content: center
 }
 
 .centerH {
     border: red solid;
 }
-
+.text_center{
+    text-align:center;
+}
+.text_left {
+    text-align: left;
+    position:relative;
+}
 a {
     color: #80C342;
     text-decoration: none;
@@ -221,10 +228,26 @@ a {
 .marginTop5 {
     margin-top: 5px;
 }
+.minWidth200{
+    min-width:200px;
+}
 .inline > div {
     display: inline-block;
 }
-
+.answer {
+    display: inline-flex;
+    margin: 15px;
+    padding: 5px;
+    border: solid 1px #e2fbe3;
+    border-radius: 2px;
+}
+    .answer > label { 
+        padding:5px;
+    }
+.answerToPrint {
+    display: inline-flex;
+    margin: 5px;
+}
 .section {
     border: solid 1px #9be08b;
     border-radius: 2px;
@@ -339,6 +362,6 @@ a {
 .newRow {
     background-color: #f2fce4;
 }
-/*.displayHref > a:after {
-    content: " [" attr(href) "] ";       
-}*/
+.width100percent{
+    width:100%;
+}

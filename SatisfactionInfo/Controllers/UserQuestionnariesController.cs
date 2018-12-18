@@ -22,10 +22,14 @@ namespace SatisfactionInfo.Controllers
         {            
             return View(await userQuestionnariesRepo.GetList());
         }
-        [HttpGet]
-        public async Task<IActionResult> GetFiltered(string code, string name, DateTime? date)
+        public async Task<IActionResult> _QuestionnariesToPrint(int id)
         {
-            var model = await userQuestionnariesRepo.GetList(code, name, date);
+            return View(await userQuestionnariesRepo.Get(id));
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetFiltered(string code, string name, DateTime? date, string description)
+        {
+            var model = await userQuestionnariesRepo.GetList(code, name, date, description);
             return PartialView("_Questionnaries", model);
         }
     }

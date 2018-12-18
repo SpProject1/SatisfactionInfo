@@ -4,6 +4,7 @@ function clearFilter() {
     $('#filterName').val(null)
     $('#filterCode').val(null)
     $('#filterDate').val(null)
+    $('#filterDescription').val(null)
     hide('#buttonUpdateFilter') 
     updateFilter();
 }
@@ -11,7 +12,8 @@ function showUpdateFilter() {
     let name = $('#filterName').val()
     let code = $('#filterCode').val()
     let date = $('#filterDate').val()
-    if (name.length > 0 || code.length > 0 || date.length > 0) {       
+    let description = $('#filterDescription').val()
+    if (name.length > 0 || code.length > 0 || date.length > 0 || description.length > 0) {       
         show('#buttonUpdateFilter')
     }
 }
@@ -76,7 +78,7 @@ $(document).ready(function () {
     let questionCount = parseInt($('#questionCount').val())
     if (!isNaN(questionCount)) {
         let code = $('#questionnarieCode').val();
-        let qArray = $('#questions').val().split(';').filter(Boolean).sort()
+        let qArray = $('#questions').val().split(';').filter(Boolean)
         for (var i = 1; i <= qArray[qArray.length - 1]; i++) {
             let questionNumber = i
             let code = $('#questionnarieCode').val();
@@ -417,7 +419,8 @@ function addQuestionnarie() {
     $('#addBtn').attr('disabled', 'disabled')
     let data = {
         Name: $('#newQuestionnarieName').val(),
-        MaxAnswers: $('#newQuestionnarieMaxAnswers').val()
+        MaxAnswers: $('#newQuestionnarieMaxAnswers').val(),
+        Description: $('#newQuestionnarieDescription').val()
     }
     loader()
     $.ajax({
@@ -476,7 +479,8 @@ function updateQuestionnarie(id) {
         Name: $('#editQuestionnarieName_' + String(id)).val(),
         Code: $('#editQuestionnarieCode_' + String(id)).val(),
         Active: $('#editQuestionnarieActive_' + String(id)).is(':checked'),
-        MaxAnswers: $('#editQuestionnarieMaxAnswers_' + String(id)).val()
+        MaxAnswers: $('#editQuestionnarieMaxAnswers_' + String(id)).val(),
+        Description: $('#editQuestionnarieDescription_' + String(id)).val(),
     }
     loader()
     $.ajax({
@@ -515,7 +519,7 @@ function deleteQuestionnarie() {
         success: function (result) {
             if (result == 'success') {
                 $('#row_' + String(toDelete)).remove();
-                hide('#row_questions_' + String(toDelete));
+                $('#row_questions_' + String(toDelete)).remove();;
                 hidePopup()
                 loader()
                 addInfo(2, 'Usunięto.');
@@ -636,6 +640,7 @@ function updateFilter() {
     let name = $('#filterName').val();
     let code = $('#filterCode').val();
     let date = $('#filterDate').val();
+    let description = $('#filterDescription').val();
     loader()
     $.ajax({
         type: "GET",
@@ -643,7 +648,8 @@ function updateFilter() {
         data: {
             name: name,
             code: code,
-            date: date
+            date: date,
+            description: description
         },
         success: function (result) {
             if (result != 'Problem z pobraniem danych') {

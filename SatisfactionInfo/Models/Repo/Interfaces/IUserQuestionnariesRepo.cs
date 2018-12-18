@@ -8,7 +8,7 @@ namespace SatisfactionInfo.Models.Repo.Interfaces
 {
     public interface IUserQuestionnariesRepo
     {
-        Task<List<UserQuestionnariesDTO>> GetList(string code = null, string name = null, DateTime? date = null);
+        Task<List<UserQuestionnariesDTO>> GetList(string code = null, string name = null, DateTime? date = null, string description = null);
         Task<UserQuestionnariesDTO> Get(string code);
         Task<UserQuestionnariesDTO> Get(int id);       
         Task Add(UserQuestionnariesDTO item);

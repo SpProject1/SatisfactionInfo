@@ -38,6 +38,9 @@
     <Content Update="Views\Questions\_Answers.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\UserQuestionnaries\_QuestionnariesToPrint.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
 </Project>

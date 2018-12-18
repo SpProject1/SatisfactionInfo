@@ -9,6 +9,9 @@
                 Nazwa
             </th>
             <th>
+                Opis
+            </th>
+            <th>
                 Kod ankiety
             </th>
             <th>
@@ -30,13 +33,16 @@
                 <input id="newQuestionnarieName" type="text" class="input_txt width100" />
             </td>
             <td>
+                <textarea rows="2" id="newQuestionnarieDescription" type="text" class="input_txt minWidth200" ></textarea>
+            </td>
+            <td>
                 <span class="disabledText">#####</span>
             </td>
             <td>
                 <span class="disabledText">#</span>
             </td>
             <td>
-                <input id="newQuestionnarieMaxAnswers" type="number" class="input_number width100" />
+                <input min="0" id="newQuestionnarieMaxAnswers" type="number" class="input_number width100" />
             </td>
             <td></td>
             <td>
@@ -50,66 +56,72 @@
         {
             QuestionnarieQuestionsViewModel model = new QuestionnarieQuestionsViewModel { List = item.QuestionnariesQuestion.ToList(), QuestionnarieId = item.Id };
             string isChecked = item.Active == true ? "checked" : "";
-            <tr id="row_@item.Id">
-                <td>
-                    <a id="rowToggle_@item.Id" href="#" class="fa fa-2x fa-angle-down text_def" onclick="toggleRow('#row_questions_@item.Id','#rowToggle_@item.Id')"></a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Code)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Active)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaxAnswers)
-                </td>
-                <td>
-                    <p class="displayHref" dis>
-                        <a asp-controller="Home"
-                           asp-action="StartQuestionnarie"
-                           asp-route-code="@item.Code"
-                           asp-protocol="https">Link</a>
-                    </p>
-                </td>
-                <td>
-                    <div class="inline">
-                        <button class="button_def"onclick="cloneQuestionnarie(@item.Id)">Klonuj</button>
-                        <button class="button_def" onclick="change('#row_@item.Id', '#editQuestionnarie_@item.Id')">Edycja</button>
-                        <button class="button_danger" onclick="showPopup(@item.Id, '#confirmationQuestionnaries')">Usuń</button>
+        <tr id="row_@item.Id">
+            <td>
+                <a id="rowToggle_@item.Id" href="#" class="fa fa-2x fa-angle-down text_def" onclick="toggleRow('#row_questions_@item.Id','#rowToggle_@item.Id')"></a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Active)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxAnswers)
+            </td>
+            <td>
+                <p class="displayHref" dis>
+                    <a asp-controller="Home"
+                       asp-action="StartQuestionnarie"
+                       asp-route-code="@item.Code"
+                       asp-protocol="https">Link</a>
+                </p>
+            </td>
+            <td>
+                <div class="inline">
+                    <button class="button_def" onclick="cloneQuestionnarie(@item.Id)">Klonuj</button>
+                    <button class="button_def" onclick="change('#row_@item.Id', '#editQuestionnarie_@item.Id')">Edycja</button>
+                    <button class="button_danger" onclick="showPopup(@item.Id, '#confirmationQuestionnaries')">Usuń</button>
 
-                    </div>
-                </td>
-            </tr>
-            <tr id="editQuestionnarie_@item.Id" class="hidden">
-                <td></td>
-                <td>
-                    <input id="editQuestionnarieName_@item.Id" type="text" class="input_txt" value="@item.Name" />
-                </td>
-                <td>
-                    <span class="disabledText">#####</span>
-                    <input id="editQuestionnarieCode_@item.Id" type="hidden" value="@item.Code" />
-                  
-                </td>
-                <td>
-                    <input id="editQuestionnarieActive_@item.Id" type="checkbox" @isChecked />
-                </td>
-                <td>
-                    <input id="editQuestionnarieMaxAnswers_@item.Id" type="number" class="input_number" value="@item.MaxAnswers" />
-                </td> 
-                <td></td>
-                <td>
-                    <div class="inline">
-                        <button id="editBtn" class="button_def" onclick="updateQuestionnarie(@item.Id)">Zapisz</button>
-                        <button class="button_def" onclick="change('#editQuestionnarie_@item.Id','#row_@item.Id')">Anuluj</button>
-                    </div>
-                </td>
-            </tr>
+                </div>
+            </td>
+        </tr>
+        <tr id="editQuestionnarie_@item.Id" class="hidden">
+            <td></td>
+            <td>
+                <input id="editQuestionnarieName_@item.Id" type="text" class="input_txt" value="@item.Name" />
+            </td>
+            <td>                
+                <textarea rows="2" id="editQuestionnarieDescription_@item.Id" type="text" class="input_txt minWidth200">@item.Description</textarea>
+            </td>
+            <td>
+                <span class="disabledText">#####</span>
+                <input id="editQuestionnarieCode_@item.Id" type="hidden" value="@item.Code" />
+
+            </td>
+            <td>
+                <input id="editQuestionnarieActive_@item.Id" type="checkbox" @isChecked />
+            </td>
+            <td>
+                <input min="0" id="editQuestionnarieMaxAnswers_@item.Id" type="number" class="input_number" value="@item.MaxAnswers" />
+            </td>
+            <td></td>
+            <td>
+                <div class="inline">
+                    <button id="editBtn" class="button_def" onclick="updateQuestionnarie(@item.Id)">Zapisz</button>
+                    <button class="button_def" onclick="change('#editQuestionnarie_@item.Id','#row_@item.Id')">Anuluj</button>
+                </div>
+            </td>
+        </tr>
             <tr id="row_questions_@item.Id" class="hidden">
                 <td></td>
-                <td id="qqTable_@item.Id" colspan="6">
+                <td id="qqTable_@item.Id" colspan="7">
                     <partial name="_Questions" model="model" />
                 </td>
             </tr>

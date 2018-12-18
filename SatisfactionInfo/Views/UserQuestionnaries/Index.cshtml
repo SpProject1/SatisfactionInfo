@@ -7,21 +7,18 @@
             <tr>
                 <th></th>
                 <th>Nazwa</th>
+                <th>Opis</th>
                 <th>Kod</th>
                 <th>Data wysłania</th>
                 <th>Link</th>
             </tr>
             <tr>
-                <th>
-                    <div class="inline">
-                        <button id="buttonClearFilter" class="button_def" onclick="clearFilter()">Czyść</button>
-                        <button id="buttonUpdateFilter" class="button_def" onclick="updateFilter()">Filtruj</button>
-                    </div>
-                </th>
+                <th><button id="buttonClearFilter" class="button_def" onclick="clearFilter()">Czyść</button></th>
                 <th><input id="filterName" type="text" class="input_txt" oninput="showUpdateFilter()" /></th>
+                <th><input id="filterDescription" type="text" class="input_txt" oninput="showUpdateFilter()" /></th>
                 <th><input id="filterCode" type="text" class="input_txt" oninput="showUpdateFilter()" /></th>
                 <th><input id="filterDate" type="date" class="input_txt" oninput="showUpdateFilter()" /></th>
-                <th></th>
+                <th><button id="buttonUpdateFilter" class="button_def hidden" onclick="updateFilter()">Filtruj</button></th>
             </tr>
         </thead>
 

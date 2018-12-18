@@ -21,7 +21,7 @@
         <tr id="addNewQuestion_@Model.QuestionnarieId" class="newRow hidden">
             <td></td>
             <td>
-                <input id="questionnarieQuestionQuestionNumber_@Model.QuestionnarieId" type="number" class="input_number" />
+                <input min="0" id="questionnarieQuestionQuestionNumber_@Model.QuestionnarieId" type="number" class="input_number" />
             </td>
             <td>
                 <select id="questionnarieQuestionQuestionId_@Model.QuestionnarieId" class="select" asp-items="ViewBag.QuestionId"></select>
@@ -59,7 +59,7 @@
             <tr id="editQuestion_@(Model.QuestionnarieId)_@item.QuestionId" class="hidden">
                 <td></td>
                 <td>
-                    <input id="editQuestionQuestionNumber_@(Model.QuestionnarieId)_@item.QuestionId" type="number" class="input_number" value="@item.QuestionNumber" />
+                    <input min="0" id="editQuestionQuestionNumber_@(Model.QuestionnarieId)_@item.QuestionId" type="number" class="input_number" value="@item.QuestionNumber" />
                 </td>
                 <td>
                     <input type="hidden" id="editQuestionQuestionId_@(Model.QuestionnarieId)_@item.QuestionId" value="@item.QuestionId" />

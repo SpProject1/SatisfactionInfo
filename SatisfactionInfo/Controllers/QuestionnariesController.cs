@@ -77,6 +77,7 @@ namespace SatisfactionInfo.Controllers
                         Active = true,
                         Code = guid,
                         MaxAnswers = item.MaxAnswers,
+                        Description = item.Description,
                         Name = item.Name + "_kopia"
                     };
                     _context.Add(newItem);

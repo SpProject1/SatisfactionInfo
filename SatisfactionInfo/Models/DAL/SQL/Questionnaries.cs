@@ -15,6 +15,7 @@ namespace SatisfactionInfo.Models.DAL.SQL
         public string Code { get; set; }
         public bool Active { get; set; }
         public int MaxAnswers { get; set; }
+        public string Description { get; set; }
 
         public virtual ICollection<QuestionnariesQuestion> QuestionnariesQuestion { get; set; }
     }

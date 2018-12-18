@@ -1,6 +1,6 @@
 ﻿USE [SatisfactionInfo]
 GO
-/****** Object:  Table [dbo].[UserQuestionnarieAnswers]    Script Date: 08.12.2018 08:45:34 ******/
+/****** Object:  Table [dbo].[UserQuestionnarieAnswers]    Script Date: 18.12.2018 01:57:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23,7 +23,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[UserQuestionnaries]    Script Date: 08.12.2018 08:45:35 ******/
+/****** Object:  Table [dbo].[UserQuestionnaries]    Script Date: 18.12.2018 01:57:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -33,27 +33,31 @@ CREATE TABLE [dbo].[UserQuestionnaries](
 	[Name] [nvarchar](50) NOT NULL,
 	[Date] [datetime] NULL,
 	[Code] [nvarchar](5) NULL,
+	[Description] [nvarchar](1000) NULL,
  CONSTRAINT [PK_UserAnswers] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[VAnsweredQuestionnaries]    Script Date: 08.12.2018 08:45:35 ******/
+/****** Object:  View [dbo].[VAnsweredQuestionnaries]    Script Date: 18.12.2018 01:57:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+
 CREATE VIEW [dbo].[VAnsweredQuestionnaries]
 AS
-SELECT        dbo.UserQuestionnaries.Name, dbo.UserQuestionnaries.Date, dbo.UserQuestionnaries.Code, dbo.UserQuestionnaries.ID, dbo.UserQuestionnarieAnswers.QuestionNumber, dbo.UserQuestionnarieAnswers.Question, 
+SELECT          dbo.UserQuestionnaries.ID, dbo.UserQuestionnaries.Name, dbo.UserQuestionnaries.Date, dbo.UserQuestionnaries.Code, dbo.UserQuestionnarieAnswers.QuestionNumber, dbo.UserQuestionnarieAnswers.Question, 
                          dbo.UserQuestionnarieAnswers.AvailableAnswers, dbo.UserQuestionnarieAnswers.Answered, dbo.UserQuestionnarieAnswers.AnswerType, dbo.UserQuestionnarieAnswers.AddWhyName, 
                          dbo.UserQuestionnarieAnswers.AddWhy, dbo.UserQuestionnarieAnswers.AddWhyBody
 FROM            dbo.UserQuestionnarieAnswers INNER JOIN
                          dbo.UserQuestionnaries ON dbo.UserQuestionnarieAnswers.UserQuestionnarieID = dbo.UserQuestionnaries.ID
+
+
 GO
-/****** Object:  Table [dbo].[Answers]    Script Date: 08.12.2018 08:45:35 ******/
+/****** Object:  Table [dbo].[Answers]    Script Date: 18.12.2018 01:57:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -67,22 +71,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[QuestionsAnswer]    Script Date: 08.12.2018 08:45:35 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[QuestionsAnswer](
-	[QuestionID] [int] NOT NULL,
-	[AnswerID] [int] NOT NULL,
- CONSTRAINT [PK_QuestionAnswer] PRIMARY KEY CLUSTERED 
-(
-	[AnswerID] ASC,
-	[QuestionID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Questionnaries]    Script Date: 08.12.2018 08:45:35 ******/
+/****** Object:  Table [dbo].[Questionnaries]    Script Date: 18.12.2018 01:57:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -92,14 +81,15 @@ CREATE TABLE [dbo].[Questionnaries](
 	[Name] [nvarchar](50) NOT NULL,
 	[Code] [nvarchar](5) NULL,
 	[Active] [bit] NOT NULL,
-	MaxAnswers [int] Not NULL,
+	[MaxAnswers] [int] NOT NULL,
+	[Description] [nvarchar](1000) NULL,
  CONSTRAINT [PK_Questionaries] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[QuestionnariesQuestion]    Script Date: 08.12.2018 08:45:35 ******/
+/****** Object:  Table [dbo].[QuestionnariesQuestion]    Script Date: 18.12.2018 01:57:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -107,7 +97,7 @@ GO
 CREATE TABLE [dbo].[QuestionnariesQuestion](
 	[QuestionnarieID] [int] NOT NULL,
 	[QuestionID] [int] NOT NULL,
-	[QuestionNumber] [int] NULL,	
+	[QuestionNumber] [int] NULL,
  CONSTRAINT [PK_QuestionnariesQuestion] PRIMARY KEY CLUSTERED 
 (
 	[QuestionID] ASC,
@@ -115,7 +105,7 @@ CREATE TABLE [dbo].[QuestionnariesQuestion](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Questions]    Script Date: 08.12.2018 08:45:35 ******/
+/****** Object:  Table [dbo].[Questions]    Script Date: 18.12.2018 01:57:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -132,7 +122,22 @@ CREATE TABLE [dbo].[Questions](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[VUserQuestionnarie]    Script Date: 08.12.2018 08:45:35 ******/
+/****** Object:  Table [dbo].[QuestionsAnswer]    Script Date: 18.12.2018 01:57:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[QuestionsAnswer](
+	[QuestionID] [int] NOT NULL,
+	[AnswerID] [int] NOT NULL,
+ CONSTRAINT [PK_QuestionAnswer] PRIMARY KEY CLUSTERED 
+(
+	[AnswerID] ASC,
+	[QuestionID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[VUserQuestionnarie]    Script Date: 18.12.2018 01:57:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -161,8 +166,9 @@ FROM     dbo.Questionnaries INNER JOIN
 		 left JOIN dbo.QuestionsAnswer ON dbo.Questions.ID = dbo.QuestionsAnswer.QuestionID 
 		 left JOIN dbo.Answers ON dbo.QuestionsAnswer.AnswerID = dbo.Answers.ID
 						 
+
 GO
-/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 08.12.2018 08:45:35 ******/
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 18.12.2018 01:57:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -176,7 +182,7 @@ CREATE TABLE [dbo].[__EFMigrationsHistory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AnswerTypes]    Script Date: 08.12.2018 08:45:35 ******/
+/****** Object:  Table [dbo].[AnswerTypes]    Script Date: 18.12.2018 01:57:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -189,7 +195,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AspNetUserClaims]    Script Date: 08.12.2018 08:45:35 ******/
+/****** Object:  Table [dbo].[AspNetUserClaims]    Script Date: 18.12.2018 01:57:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -205,7 +211,7 @@ CREATE TABLE [dbo].[AspNetUserClaims](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AspNetUsers]    Script Date: 08.12.2018 08:45:35 ******/
+/****** Object:  Table [dbo].[AspNetUsers]    Script Date: 18.12.2018 01:57:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -231,6 +237,273 @@ CREATE TABLE [dbo].[AspNetUsers](
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[Answers] ON 
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (1, N'Tak')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (2, N'Nie')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (3, N'1')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (4, N'2')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (5, N'3')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (6, N'4')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (7, N'5')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (8, N'Może')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (9, N'lepsza niż się spodziewałem/am')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (10, N'gorsza niż się spodziewałem/am')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (11, N'Fanpage Szkoły Programowania WSEI')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (12, N'Fanpage innego podmiotu/organizacji (jaki?)')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (13, N'Reklama w sieci (google)')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (14, N'Serwis enevea.pl')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (15, N'Linkedin Szkoły Programowania WSEI')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (16, N'Polecenie znajomego/znajomej')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (17, N'Inne  (jakie źródło?)')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (19, N'PONIEDZIAŁEK')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (20, N'WTOREK')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (21, N'ŚRODA')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (22, N'CZWARTEK ')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (23, N'PIĄTEK')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (24, N'SOBOTA')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (25, N'do południa (8:00-12:00)')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (26, N'po południu (12:00-16:00)	')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (27, N'wieczorem (16:00-20:00)')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (28, N'maturzysta')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (29, N'student')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (30, N'osoba pracująca ( określ branżę/stanowisko pracy?)')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (31, N'osoba bezrobotna')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (32, N'urlop wychowawczy')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (33, N'KOBIETA')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (34, N'MĘŻCZYZNA')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (35, N'18-29')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (36, N'30-39')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (37, N'40-49')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (38, N'powyżej 49 lat')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (39, N'taka, jaką się spodziewałem/am')
+GO
+INSERT [dbo].[Answers] ([ID], [Answer]) VALUES (40, N'Jestem kursantem szkoły')
+GO
+SET IDENTITY_INSERT [dbo].[Answers] OFF
+GO
+INSERT [dbo].[AnswerTypes] ([AnswerType]) VALUES (N'Jednokrotny')
+GO
+INSERT [dbo].[AnswerTypes] ([AnswerType]) VALUES (N'Numeryczny')
+GO
+INSERT [dbo].[AnswerTypes] ([AnswerType]) VALUES (N'Opisowy')
+GO
+INSERT [dbo].[AnswerTypes] ([AnswerType]) VALUES (N'Wielokrotny')
+GO
+INSERT [dbo].[AspNetUsers] ([Id], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'2df56727-5b8b-412e-8dd0-b0b01cbaec78', N'admin@admin.admin', N'ADMIN@ADMIN.ADMIN', NULL, NULL, 0, N'AQAAAAEAACcQAAAAED4HyZh0aUN7+z6CihzLt1/i8ghaUIsh1knKw1yDFKYSQRPU97abfnA+hPCQBfOs0A==', N'RX7SXOGVZGFTWWA7UAOCS3VEOOJKEPWI', N'a646307e-3a45-4b57-83cd-767e4eada78c', NULL, 0, 0, NULL, 1, 0)
+GO
+SET IDENTITY_INSERT [dbo].[Questionnaries] ON 
+GO
+INSERT [dbo].[Questionnaries] ([ID], [Name], [Code], [Active], [MaxAnswers], [Description]) VALUES (5, N'ANKIETA KOŃCOWA', N'4ba2a', 1, 25, N'# Wypełnienie poniższej ankiety i Państwa sugestie, pomogą nam w przyszłości do organizacji kolejnych kursów/szkoleń/ warsztatów, takich jakich Państwo oczekują i w jakich chętnie wzięliby udział. 
+# Ankieta jest anonimowa. Czas na wypełnienie to maksymalnie 3  minuty :)
+# Dziękujemy za poświęcony czas na udzielenie odpowiedzi. 
+')
+GO
+SET IDENTITY_INSERT [dbo].[Questionnaries] OFF
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 1, 1)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 2, 2)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 3, 3)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 4, 4)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 5, 5)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 6, 6)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 7, 7)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 8, 8)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 9, 9)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 10, 10)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 11, 11)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 12, 12)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 13, 13)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 14, 14)
+GO
+INSERT [dbo].[QuestionnariesQuestion] ([QuestionnarieID], [QuestionID], [QuestionNumber]) VALUES (5, 15, 15)
+GO
+SET IDENTITY_INSERT [dbo].[Questions] ON 
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (1, N'CZY UWAŻASZ, ŻE TEMAT KURSU ROZWINĄŁ TWOJE UMIEJĘTNOŚCI PRZYDATNE
+ W PROGRAMOWANIU?', N'Jednokrotny', NULL, 0)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (2, N'JAK OCENIASZ ORGANIZACJĘ PROWADZONEGO KURSU? UZASADNIJ SWÓJ WYBÓR.', N'Jednokrotny', N'Uzasadnij jeśli inna niż spodziewana', 1)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (3, N'JAK DOWIEDZIAŁEŚ/AŚ SIĘ O KURSIE? ', N'Jednokrotny', N'Jakie źródło', 1)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (4, N'JAK OCENIASZ MATERIAŁY PODCZAS KURSU (prezentacja/to, z czego korzystałeś na zajęciach/materiały na platformie)  (1 – słabo przygotowana; 5 – bardzo dobrze przygotowana)', N'Jednokrotny', N'Uzasadnij swoją ocenę', 1)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (5, N'JAK OCENIASZ SPOSÓB PROWADZENIA KURSU PRZEZ TRENERA ? (1 – mało profesjonalnie 5 – bardzo profesjonalnie)
+', N'Jednokrotny', N'Uzasadnij swoją ocenę', 1)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (6, N'O CZYM CHCIAŁBYŚ/CHCIAŁABYŚ POSŁUCHAĆ NA BEZPŁATNYCH WARSZTATACH, ORGANIZOWANYCH PRZEZ SZKOŁĘ PROGRAMOWANIA WSEI', N'Opisowy', NULL, 0)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (7, N'JAKIE DNI TYGODNIA SĄ DLA CIEBIE NAJBARDZIEJ ODPOWIEDNIE NA TAKIE WARSZTATY ?', N'Wielokrotny', NULL, 0)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (8, N'JAKIE  GODZINY SĄ DLA CIEBIE NAJBARDZIEJ ODPOWIEDNIE NA TAKIE WARSZTATY ?', N'Wielokrotny', NULL, 0)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (9, N'OKREŚL SWÓJ STATUS ZAWODOWY. MOŻESZ WYBRAĆ WIĘCEJ NIŻ 1 ODPOWIEDŹ.', N'Wielokrotny', N'Status zawodowy', 1)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (10, N'CZY JESTEŚ STUDENTEM/STUDENTKĄ WSEI?   ', N'Jednokrotny', NULL, 0)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (11, N'CZY JESTEŚ ZAINTERESOWANY/A PODJĘCIEM NAUKI W SZKOLE PROGRAMOWANIA WSEI?', N'Jednokrotny', NULL, 0)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (12, N'CO W OFERCIE SZKOŁY PROGRAMOWANIA WSEI ZWRACA TWOJĄ UWAGĘ? ', N'Opisowy', NULL, 0)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (13, N'#Czy chciałbyś/aś jeszcze coś dodać? Tutaj możesz zostawić nam cenną informację :)', N'Jednokrotny', N'Opisz cenną informację', 1)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (14, N'#Metryczka', N'Jednokrotny', NULL, 0)
+GO
+INSERT [dbo].[Questions] ([ID], [Question], [AnswerType], [AddWhyName], [AddWhy]) VALUES (15, N'#Wiek', N'Jednokrotny', NULL, 0)
+GO
+SET IDENTITY_INSERT [dbo].[Questions] OFF
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (1, 1)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (10, 1)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (11, 1)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (13, 1)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (1, 2)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (10, 2)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (11, 2)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (13, 2)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (4, 3)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (5, 3)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (4, 4)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (5, 4)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (4, 5)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (5, 5)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (4, 6)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (5, 6)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (4, 7)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (5, 7)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (1, 8)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (2, 9)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (2, 10)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (3, 11)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (3, 12)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (3, 13)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (3, 14)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (3, 15)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (3, 16)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (3, 17)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (7, 19)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (7, 20)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (7, 21)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (7, 22)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (7, 23)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (7, 24)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (8, 25)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (8, 26)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (8, 27)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (9, 28)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (9, 29)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (9, 30)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (9, 31)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (9, 32)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (14, 33)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (14, 34)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (15, 35)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (15, 36)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (15, 37)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (15, 38)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (2, 39)
+GO
+INSERT [dbo].[QuestionsAnswer] ([QuestionID], [AnswerID]) VALUES (11, 40)
 GO
 ALTER TABLE [dbo].[AspNetUserClaims]  WITH CHECK ADD  CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId] FOREIGN KEY([UserId])
 REFERENCES [dbo].[AspNetUsers] ([Id])
@@ -268,307 +541,4 @@ REFERENCES [dbo].[UserQuestionnaries] ([ID])
 GO
 ALTER TABLE [dbo].[UserQuestionnarieAnswers] CHECK CONSTRAINT [FK_UserQuestionnarieAnswers_UserQuestionnaries]
 GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
-Begin DesignProperties = 
-   Begin PaneConfigurations = 
-      Begin PaneConfiguration = 0
-         NumPanes = 4
-         Configuration = "(H (1[48] 4[14] 2[14] 3) )"
-      End
-      Begin PaneConfiguration = 1
-         NumPanes = 3
-         Configuration = "(H (1 [50] 4 [25] 3))"
-      End
-      Begin PaneConfiguration = 2
-         NumPanes = 3
-         Configuration = "(H (1 [50] 2 [25] 3))"
-      End
-      Begin PaneConfiguration = 3
-         NumPanes = 3
-         Configuration = "(H (4 [30] 2 [40] 3))"
-      End
-      Begin PaneConfiguration = 4
-         NumPanes = 2
-         Configuration = "(H (1 [56] 3))"
-      End
-      Begin PaneConfiguration = 5
-         NumPanes = 2
-         Configuration = "(H (2 [66] 3))"
-      End
-      Begin PaneConfiguration = 6
-         NumPanes = 2
-         Configuration = "(H (4 [50] 3))"
-      End
-      Begin PaneConfiguration = 7
-         NumPanes = 1
-         Configuration = "(V (3))"
-      End
-      Begin PaneConfiguration = 8
-         NumPanes = 3
-         Configuration = "(H (1[56] 4[18] 2) )"
-      End
-      Begin PaneConfiguration = 9
-         NumPanes = 2
-         Configuration = "(H (1 [75] 4))"
-      End
-      Begin PaneConfiguration = 10
-         NumPanes = 2
-         Configuration = "(H (1[66] 2) )"
-      End
-      Begin PaneConfiguration = 11
-         NumPanes = 2
-         Configuration = "(H (4 [60] 2))"
-      End
-      Begin PaneConfiguration = 12
-         NumPanes = 1
-         Configuration = "(H (1) )"
-      End
-      Begin PaneConfiguration = 13
-         NumPanes = 1
-         Configuration = "(V (4))"
-      End
-      Begin PaneConfiguration = 14
-         NumPanes = 1
-         Configuration = "(V (2))"
-      End
-      ActivePaneConfig = 0
-   End
-   Begin DiagramPane = 
-      Begin Origin = 
-         Top = 0
-         Left = 0
-      End
-      Begin Tables = 
-         Begin Table = "UserQuestionnarieAnswers"
-            Begin Extent = 
-               Top = 13
-               Left = 268
-               Bottom = 235
-               Right = 465
-            End
-            DisplayFlags = 280
-            TopColumn = 2
-         End
-         Begin Table = "UserQuestionnaries"
-            Begin Extent = 
-               Top = 7
-               Left = 30
-               Bottom = 137
-               Right = 200
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-      End
-   End
-   Begin SQLPane = 
-   End
-   Begin DataPane = 
-      Begin ParameterDefaults = ""
-      End
-      Begin ColumnWidths = 13
-         Width = 284
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-      End
-   End
-   Begin CriteriaPane = 
-      Begin ColumnWidths = 11
-         Column = 1440
-         Alias = 900
-         Table = 1170
-         Output = 720
-         Append = 1400
-         NewValue = 1170
-         SortType = 1350
-         SortOrder = 1410
-         GroupBy = 1350
-         Filter = 1350
-         Or = 1350
-         Or = 1350
-         Or = 1350
-      End
-   End
-End
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'VAnsweredQuestionnaries'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'VAnsweredQuestionnaries'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
-Begin DesignProperties = 
-   Begin PaneConfigurations = 
-      Begin PaneConfiguration = 0
-         NumPanes = 4
-         Configuration = "(H (1[46] 4[17] 2[3] 3) )"
-      End
-      Begin PaneConfiguration = 1
-         NumPanes = 3
-         Configuration = "(H (1 [50] 4 [25] 3))"
-      End
-      Begin PaneConfiguration = 2
-         NumPanes = 3
-         Configuration = "(H (1 [50] 2 [25] 3))"
-      End
-      Begin PaneConfiguration = 3
-         NumPanes = 3
-         Configuration = "(H (4 [30] 2 [40] 3))"
-      End
-      Begin PaneConfiguration = 4
-         NumPanes = 2
-         Configuration = "(H (1 [56] 3))"
-      End
-      Begin PaneConfiguration = 5
-         NumPanes = 2
-         Configuration = "(H (2 [66] 3))"
-      End
-      Begin PaneConfiguration = 6
-         NumPanes = 2
-         Configuration = "(H (4 [50] 3))"
-      End
-      Begin PaneConfiguration = 7
-         NumPanes = 1
-         Configuration = "(V (3))"
-      End
-      Begin PaneConfiguration = 8
-         NumPanes = 3
-         Configuration = "(H (1[56] 4[18] 2) )"
-      End
-      Begin PaneConfiguration = 9
-         NumPanes = 2
-         Configuration = "(H (1 [75] 4))"
-      End
-      Begin PaneConfiguration = 10
-         NumPanes = 2
-         Configuration = "(H (1[66] 2) )"
-      End
-      Begin PaneConfiguration = 11
-         NumPanes = 2
-         Configuration = "(H (4 [60] 2))"
-      End
-      Begin PaneConfiguration = 12
-         NumPanes = 1
-         Configuration = "(H (1) )"
-      End
-      Begin PaneConfiguration = 13
-         NumPanes = 1
-         Configuration = "(V (4))"
-      End
-      Begin PaneConfiguration = 14
-         NumPanes = 1
-         Configuration = "(V (2))"
-      End
-      ActivePaneConfig = 0
-   End
-   Begin DiagramPane = 
-      Begin Origin = 
-         Top = -96
-         Left = 0
-      End
-      Begin Tables = 
-         Begin Table = "Questionaries"
-            Begin Extent = 
-               Top = 6
-               Left = 8
-               Bottom = 102
-               Right = 178
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "QuestionariesQuestion"
-            Begin Extent = 
-               Top = 117
-               Left = 222
-               Bottom = 213
-               Right = 392
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "Questions"
-            Begin Extent = 
-               Top = 4
-               Left = 412
-               Bottom = 169
-               Right = 582
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "QuestionsAnswer"
-            Begin Extent = 
-               Top = 23
-               Left = 624
-               Bottom = 119
-               Right = 794
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "Answers"
-            Begin Extent = 
-               Top = 185
-               Left = 410
-               Bottom = 330
-               Right = 575
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-      End
-   End
-   Begin SQLPane = 
-   End
-   Begin DataPane = 
-      Begin ParameterDefaults = ""
-      End
-      Begin ColumnWidths = 9
-         Width = 284
-         Width = 1500
-         Width = 2010
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-         Width = 1500
-      End
-   End
-   Begin CriteriaPane = 
-      Begin ColumnWidths = 11
-         Column = 1440
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'VUserQuestionnarie'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N'         Alias = 900
-         Table = 1170
-         Output = 720
-         Append = 1400
-         NewValue = 1170
-         SortType = 1350
-         SortOrder = 1410
-         GroupBy = 1350
-         Filter = 1350
-         Or = 1350
-         Or = 1350
-         Or = 1350
-      End
-   End
-End
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'VUserQuestionnarie'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'VUserQuestionnarie'
-GO
-------------------------------Dodatki------------------------------
 
-GO
-INSERT INTO [dbo].[AnswerTypes] ([AnswerType]) VALUES ('Jednokrotny'),('Numeryczny'),('Opisowy'),('Wielokrotny')

@@ -23,7 +23,8 @@ namespace SatisfactionInfo.Models.Repo.SQL
             {
                 Name = item.Name,
                 Code = item.Code,
-                Date = DateTime.Now
+                Date = DateTime.Now,
+                Description = item.Description
             };
             await db.UserQuestionnaries.AddAsync(dbItem);
             await db.SaveChangesAsync();
@@ -68,6 +69,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
 
                 userQuestionnarie.UserQuestionnarie.Code = userQuestionnarie.Code;
                 userQuestionnarie.UserQuestionnarie.Name = userQuestionnarie.Name;
+                userQuestionnarie.UserQuestionnarie.Description = userQuestionnarie.Description;
                 userQuestionnarie.Questions.ToList().ForEach(q =>
                 {
                     var item = answers.Where(a => a.QuestionNumber == q.QuestionNumber.ToString()).FirstOrDefault();
@@ -102,6 +104,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
                     Date = b.Date,
                     Id = b.Id,
                     Name = b.Name,
+                    Description = b.Description,
                     UserQuestionnarieAnswersDTOs = db.UserQuestionnarieAnswers.Select(a => new UserQuestionnarieAnswersDTO
                     {
                         Id = a.Id,
@@ -129,6 +132,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
                     Date = b.Date,
                     Id = b.Id,
                     Name = b.Name,
+                    Description = b.Description,
                     UserQuestionnarieAnswersDTOs = db.UserQuestionnarieAnswers.Select(a => new UserQuestionnarieAnswersDTO
                     {
                         Id = a.Id,
@@ -147,7 +151,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
             return result;
         }
 
-        public async Task<List<UserQuestionnariesDTO>> GetList(string code = null, string name = null, DateTime? date = null)
+        public async Task<List<UserQuestionnariesDTO>> GetList(string code = null, string name = null, DateTime? date = null, string description = null)
         {
             var toRemove = new List<UserQuestionnariesDTO>();            
             var result = await db.UserQuestionnaries
@@ -157,6 +161,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
                 Date = b.Date,
                 Id = b.Id,
                 Name = b.Name,
+                Description = b.Description,
                 UserQuestionnarieAnswersDTOs = db.UserQuestionnarieAnswers.Select(a => new UserQuestionnarieAnswersDTO
                 {
                     Id = a.Id,
@@ -180,6 +185,10 @@ namespace SatisfactionInfo.Models.Repo.SQL
             if (name != null)
             {
                 toRemove.AddRange(result.Where(a => !a.Name.ToLower().Contains(name.ToLower())).ToList());
+            }
+            if (description != null)
+            {              
+                toRemove.AddRange(result.Where(a => a.Description == null || (a.Description != null && !a.Description.ToLower().Contains(description.ToLower()))).ToList());                
             }
             if (date.HasValue)
             {                
@@ -219,6 +228,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
                 result.Code = questionnarie.Code;
                 result.Active = questionnarie.Active;
                 result.MaxAnswers = questionnarie.MaxAnswers;
+                result.Description = questionnarie.Description;
                 result.Questions = await db.Questions.Where(a => questionnariesQuestions.Any(b => b.QuestionId == a.Id)).Select(a => new QuestionsDTO
                 {
                     Id = a.Id,

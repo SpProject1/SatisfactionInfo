@@ -2,12 +2,13 @@
 @{
     ViewData["Title"] = "Ankieta";
     string name = Model == null ? null : Model.Name;
-    int questionNumber = Model.Questions.Count;
+    int questionNumber = Model.Questions.Count;   
 }
 <div id="questionnarieContent">
     @if (Model != null)
     {
-        <div class="center"><h2>@name</h2></div>         
+        <div class="center"><h2>@name</h2></div>
+        <div class="section_content">@Model.Description</div>
         @if (Model.Questions != null && Model.Questions.Count > 0)
         {
             <input type="hidden" id="questionnarieCode" value="@Model.Code" />
@@ -18,11 +19,10 @@
             </script>
             <div class="contentRow">
                 @foreach (var question in Model.Questions.OrderBy(a => a.QuestionNumber))
-                {
+                {                     
                     questionNumber = question.QuestionNumber;
                     <script>
-
-                    questions.value += '@questionNumber;'
+                        questions.value += '@questionNumber;'
                     </script>
                     <div id="question_@questionNumber" class="section">
                         <div class="section_header"><span id="required_@questionNumber">#@(questionNumber) @question.Question</span></div>
@@ -30,54 +30,48 @@
 
                             @if (question.AnswerType.ToLower() == "jednokrotny")
                             {
-                                <div class="center">
+                                <div class="text_center">
                                     @foreach (var answer in question.AnswersDTOs)
-                                    {
-                                        <div class="section">
-                                            <lable>@answer.Answer</lable>
-                                            <input onclick="updateTempAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', null)" type="radio" name="decision" value="@answer.Answer" />
-                                        </div>
+                                    { 
+                                    <div class="answer">                                         
+                                        <label><input onclick="updateTempAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', null)" type="radio" name="q_@question.Id" value="@answer.Answer" /> @answer.Answer</label>
+                                    </div>
                                     }
                                 </div>
                             }
                             else if (question.AnswerType.ToLower() == "wielokrotny")
                             {
-                                <div class="center">
+                                <div class="text_center">
                                     @foreach (var answer in question.AnswersDTOs)
                                     {
-                                        <div class="section">
-                                            <lable>@answer.Answer</lable>
-                                            <input type="checkbox" onchange="updateTempAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', this)" value="@answer.Answer" />
+                                        <div class="answer">
+
+                                            <label><input type="checkbox" onchange="updateTempAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', this)" value="@answer.Answer" /> @answer.Answer</label>
                                         </div>
+
                                     }
                                 </div>
+
                             }
                             else if (question.AnswerType.ToLower() == "numeryczny")
                             {
-                                <div class="center">
+                                <div class="text_center">
                                     @foreach (var answer in question.AnswersDTOs)
                                     {
                                         <div>
-                                            <input id="numericAnswer_@questionNumber" oninput="updateSimlpeAnswer(@questionNumber, '#numericAnswer_@questionNumber')" class="input_number" type="number" />
+                                            <input min="0" id="numericAnswer_@questionNumber" oninput="updateSimlpeAnswer(@questionNumber, '#numericAnswer_@questionNumber')" class="input_number" type="number" />
                                         </div>
                                     }
                                 </div>
                             }
                             else if (question.AnswerType.ToLower() == "opisowy")
                             {
-                                
-                                    @foreach (var answer in question.AnswersDTOs)
-                                    {
-                                  
-                                        <textarea id="descriptionAnswer_@questionNumber" oninput="updateSimlpeAnswer(@questionNumber, '#descriptionAnswer_@questionNumber')" rows="4" class="input_txt textarea"> </textarea>
-                                   
-                                    }
-                               
-                            }
-
+                                <textarea id="descriptionAnswer_@questionNumber" oninput="updateSimlpeAnswer(@questionNumber, '#descriptionAnswer_@questionNumber')" rows="4" class="input_txt textareaMax"> </textarea>
+                            } 
                             @if (question.AddWhy == true)
                             {
-                                <div class="label_def">@question.AddWhyName:</div>
+                                <hr />
+                                <div class="label_def width100percent">@question.AddWhyName:</div>
                                 <textarea oninput="updateAddWhyBody(@questionNumber)" id="addWhyBody_@questionNumber" rows="4" class="input_txt textareaMax"></textarea>
                             }
                         </div>
@@ -93,5 +87,5 @@
     else
     {
         <div class="center"><h5>Brak danych do wyświetlenia</h5></div>
-    } 
+    }
 </div>
