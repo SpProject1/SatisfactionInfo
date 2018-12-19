@@ -18,7 +18,7 @@
                         {
                             string ch = answer.Answered == a ? "checked" : "";
                             <div class="answerToPrint">
-                                <label><input type="radio" @ch />@a</label>
+                                <label><input disabled type="radio" @ch />@a</label>
                             </div>
                         }
                     </div>
@@ -30,7 +30,7 @@
                         {
                             var ch = answer.Answered.Split(';').Contains(a) ? "checked" : "";
                             <div class="answerToPrint">
-                                <label><input type="checkbox" @ch /> @a</label>
+                                <label><input disabled type="checkbox" @ch /> @a</label>
                             </div>
 
                         }
@@ -41,7 +41,7 @@
                 {
                     <div class="center">
                         <div>
-                            <input min="0" class="input_number" type="number" value="@answer.Answered" />
+                            <input disabled min="0" class="input_number" type="number" value="@answer.Answered" />
                         </div>
                     </div>
                 }
