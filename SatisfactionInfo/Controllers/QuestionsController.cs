@@ -8,54 +8,42 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SatisfactionInfo.Models.DAL.SQL;
 using SatisfactionInfo.Models.DTO;
+using SatisfactionInfo.Models.Repo.Interfaces;
 
 namespace SatisfactionInfo.Controllers
 {
     [Authorize]
     public class QuestionsController : Controller
     {
-        private readonly SatisfactionInfoContext _context;
+        private readonly IQuestionsRepo _repo;
 
-        public QuestionsController(SatisfactionInfoContext context)
+        public QuestionsController(IQuestionsRepo repo)
         {
-            _context = context;
+            _repo = repo;
         }
         public async Task<IActionResult> Index()
         {
-            ViewData["AnswerId"] = new SelectList(_context.Answers, "Id", "Answer");
-            ViewData["AnswerType"] = new SelectList(_context.AnswerTypes, "AnswerType", "AnswerType");
-            var model = _context
-                .Questions.OrderByDescending(a => a.Id)
-                .Include(q => q.AnswerTypeNavigation)
-                .Include(qa => qa.QuestionsAnswer)
-                .ThenInclude(a => a.Answer);
-            return View(await model.ToListAsync());
+            setViewData();          
+            return View(await _repo.GetList());
         }
         public async Task<PartialViewResult> _Answers(int questionId)
         {
-            ViewBag.QuestionID = questionId;
-            var model = _context.QuestionsAnswer.Where(a => a.QuestionId == questionId).Include(a => a.Answer);
-            return PartialView(nameof(_Answers), await model.ToListAsync());
+            ViewBag.QuestionID = questionId;          
+            return PartialView(nameof(_Answers), await _repo.GetListQuestionsAnswer(questionId));
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddOrUpdate(Questions item)
+        public async Task<IActionResult> AddOrUpdate(QuestionsDTO item)
         {
-            ViewData["AnswerId"] = new SelectList(_context.Answers, "Id", "Answer");
-            ViewData["AnswerType"] = new SelectList(_context.AnswerTypes, "AnswerType", "AnswerType");
+            setViewData();
             if (ModelState.IsValid)
             {
                 if (item.Id > 0)
-                    _context.Update(item);
+                    await _repo.Update(item);
                 else
-                    _context.Add(item);
-                await _context.SaveChangesAsync();
-                var model = _context
-                .Questions.OrderByDescending(a => a.Id)
-                .Include(q => q.AnswerTypeNavigation)
-                .Include(qa => qa.QuestionsAnswer)
-                .ThenInclude(a => a.Answer);
-                return PartialView("_Questions", await model.ToListAsync());
+                  await  _repo.Add(item);
+               
+                return PartialView("_Questions", await _repo.GetList());
             }
             return Content("Wypełnij wszystkie wymagane pola");
         }
@@ -63,26 +51,24 @@ namespace SatisfactionInfo.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            if (_context.QuestionsAnswer.Any(a => a.QuestionId == id))
-                return Content("Nie mozna usunąć pytania - posiada odpowiedzi.");
-            var questions = await _context.Questions.FindAsync(id);            
-            _context.Questions.Remove(questions);
-            await _context.SaveChangesAsync();
+            if (_repo.QuestionsAnswerExists(id))
+                return Content("Nie mozna usunąć pytania - posiada odpowiedzi.");            
+            await _repo.Delete(id);
             return Content("success");
         }
+
+        //questionAnswers
         [HttpPost]
-        public async Task<IActionResult> AddQuestionAnswer(QuestionsAnswer item)
+        public async Task<IActionResult> AddQuestionAnswer(QuestionsAnswerDTO item)
         {
-            ViewData["AnswerId"] = new SelectList(_context.Answers, "Id", "Answer");
-            ViewData["AnswerType"] = new SelectList(_context.AnswerTypes, "AnswerType", "AnswerType");
+            setViewData();
             if (ModelState.IsValid)
             {
-                if (!questionsAnswerExists(item.QuestionId, item.AnswerId))
+                if (!_repo.QuestionsAnswerExists(item.QuestionId, item.AnswerId))
                 {
-                    _context.Add(item);
-                    await _context.SaveChangesAsync();
+                    await _repo.AddQuestionAnswer(item);
                     var model = new QuestionAnswerViewModel();
-                    model.List = await _context.QuestionsAnswer.Where(a => a.QuestionId == item.QuestionId).Include(q => q.Answer).ToListAsync();
+                    model.List = await _repo.GetListQuestionsAnswer(item.QuestionId);
                     model.QuestionId = item.QuestionId;
                     return PartialView("_Answers", model);
                 }
@@ -92,16 +78,15 @@ namespace SatisfactionInfo.Controllers
             return Content("Wypełnij wszystkie wymagane pola");
         }
         [HttpDelete]//DeleteQuestionAnswer
-        public async Task<IActionResult> DeleteQuestionAnswer(QuestionsAnswer item)
+        public async Task<IActionResult> DeleteQuestionAnswer(QuestionsAnswerDTO item)
         {
-            var questionsAnswer = await _context.QuestionsAnswer.Where(a => a.AnswerId == item.AnswerId && a.QuestionId == a.QuestionId).FirstOrDefaultAsync();
-            _context.QuestionsAnswer.Remove(questionsAnswer);
-            await _context.SaveChangesAsync();
+            await _repo.DeleteQuestionAnswer(item);
             return Content("success");
-        }
-        private bool questionsAnswerExists(int qid, int aid)
+        }     
+        private void setViewData()
         {
-            return _context.QuestionsAnswer.Any(e => e.QuestionId == qid && e.AnswerId == aid);
+            ViewData["AnswerId"] = new SelectList(_repo.GetAnswersList(), "Id", "Answer");
+            ViewData["AnswerType"] = new SelectList(_repo.GetAnswerTypesList(), "AnswerType", "AnswerType");
         }
     }
 }

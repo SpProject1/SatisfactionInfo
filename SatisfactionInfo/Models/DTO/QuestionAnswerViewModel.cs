@@ -8,7 +8,7 @@ namespace SatisfactionInfo.Models.DTO
 {
     public class QuestionAnswerViewModel
     {
-        public  List<QuestionsAnswer> List { get; set; }
+        public  List<QuestionsAnswerDTO> List { get; set; }
         public int QuestionId { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SatisfactionInfo.Models.DAL.SQL.Questions>
+﻿@model IEnumerable<SatisfactionInfo.Models.DTO.QuestionsDTO>
 <table id="questions" class="table">
     <thead>
         <tr>
@@ -44,7 +44,7 @@
         </tr>
         @foreach (var item in Model)
         {
-            QuestionAnswerViewModel model = new QuestionAnswerViewModel { List = item.QuestionsAnswer.ToList(), QuestionId = item.Id };
+            QuestionAnswerViewModel model = new QuestionAnswerViewModel { List = item.QuestionsAnswerDTO.ToList(), QuestionId = item.Id };
             string isChecked = item.AddWhy == true ? "checked" : "";
             <tr id="row_@item.Id">
                 <td>

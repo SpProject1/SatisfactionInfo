@@ -1,63 +1,76 @@
 ﻿@model UserQuestionnariesDTO
-@{ 
+@{
     Layout = null;
-}  
+}
 <link href="~/css/min/site.min.css" rel="stylesheet" />
-<div id="print_@Model.Id">
-    <div class="center">@Model.Name / @Model.Code</div>
-    @foreach (var answer in Model.UserQuestionnarieAnswersDTOs)
-    {
-        <div class="section text_left">
-            <div class="section_header"><span>#@(answer.QuestionNumber) @answer.Question</span></div>
-            <div class="section_content">
+@if (ViewBag.ToPrint == true)
+{
+    <a asp-area="" asp-controller="Home" asp-action="Index"><img height="50" src="~/images/logo.png" /></a>
+    <button id="printBtn" class="right button_def" onclick="window.print();">Drukuj</button>
+}
+    <div id="print_@Model.Id">
 
-                @if (answer.AnswerType.ToLower() == "jednokrotny")
-                {
-                    <div class="text_center">
-                        @foreach (var a in answer.AvailableAnswers.Split(';'))
-                        {
-                            string ch = answer.Answered == a ? "checked" : "";
-                            <div class="answerToPrint">
-                                <label><input disabled type="radio" @ch />@a</label>
-                            </div>
-                        }
-                    </div>
-                }
-                else if (answer.AnswerType.ToLower() == "wielokrotny")
-                {
-                    <div class="text_center">
-                        @foreach (var a in answer.AvailableAnswers.Split(';'))
-                        {
-                            var ch = answer.Answered.Split(';').Contains(a) ? "checked" : "";
-                            <div class="answerToPrint">
-                                <label><input disabled type="checkbox" @ch /> @a</label>
-                            </div>
-
-                        }
-                    </div>
-
-                }
-                else if (answer.AnswerType.ToLower() == "numeryczny")
-                {
-                    <div class="center">
-                        <div>
-                            <input disabled min="0" class="input_number" type="number" value="@answer.Answered" />
-                        </div>
-                    </div>
-                }
-                else if (answer.AnswerType.ToLower() == "opisowy")
-                {
-                    <div class="section textareaMax">@answer.Answered</div>
-                }
-                @if (answer.AddWhy == true)
-                {
-                    <hr />
-                    <div class="label_def width100percent">@answer.AddWhyName:</div>
-                    <div class="section textareaMax">
-                        @answer.AddWhyBody
-                    </div>
-                }
+        @if (ViewBag.ToPrint == true)
+        {
+            <div class="center">
+                <p>@Model.Name / @Model.Code / @Model.Date</p>
             </div>
-        </div>
-    }
-</div>
+            <pre style="white-space: pre-wrap;">@Model.Description</pre>
+        }
+
+        @foreach (var answer in Model.UserQuestionnarieAnswersDTOs)
+        {
+            <div class="section text_left">
+                <div class="section_header"><span>#@(answer.QuestionNumber) @answer.Question</span></div>
+                <div class="section_content">
+
+                    @if (answer.AnswerType.ToLower() == "jednokrotny")
+                    {
+                        <div class="text_center">
+                            @foreach (var a in answer.AvailableAnswers.Split(';'))
+                            {
+                                string ch = answer.Answered == a ? "checked" : "";
+                                <div class="answerToPrint">
+                                    <label><input disabled type="radio" @ch />@a</label>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else if (answer.AnswerType.ToLower() == "wielokrotny")
+                    {
+                        <div class="text_center">
+                            @foreach (var a in answer.AvailableAnswers.Split(';'))
+                            {
+                                var ch = answer.Answered.Split(';').Contains(a) ? "checked" : "";
+                                <div class="answerToPrint">
+                                    <label><input disabled type="checkbox" @ch /> @a</label>
+                                </div>
+
+                            }
+                        </div>
+
+                    }
+                    else if (answer.AnswerType.ToLower() == "numeryczny")
+                    {
+                        <div class="center">
+                            <div>
+                                <input disabled min="0" class="input_number" type="number" value="@answer.Answered" />
+                            </div>
+                        </div>
+                    }
+                    else if (answer.AnswerType.ToLower() == "opisowy")
+                    {
+                        <div class="section textareaMax">@answer.Answered</div>
+                    }
+                    @if (answer.AddWhy == true)
+                    {
+                        <hr />
+                        <div class="label_def width100percent">@answer.AddWhyName:</div>
+                        <div class="section textareaMax">
+                            @answer.AddWhyBody
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>

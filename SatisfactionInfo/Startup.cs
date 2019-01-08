@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SatisfactionInfo.Data;
 using SatisfactionInfo.Models.DAL.SQL;
 using SatisfactionInfo.Models.DTO;
 using SatisfactionInfo.Models.Repo.Interfaces;
@@ -36,22 +35,19 @@ namespace SatisfactionInfo
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            });          
 
             services.AddDbContext<SatisfactionInfoContext>(options =>
                options.UseSqlServer(
                    Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDefaultIdentity<IdentityUser>()
+              .AddEntityFrameworkStores<SatisfactionInfoContext>();
+
             services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddTransient<IAnswersRepo, AnswersRepo>();            
+            services.AddTransient<IQuestionsRepo, QuestionsRepo>();
             services.AddTransient<IUserQuestionnariesRepo, UserQuestionnariesRepo>(); 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);             
@@ -78,7 +74,12 @@ namespace SatisfactionInfo
             app.UseAuthentication();
 
             app.UseMvc(routes =>
-            {               
+            {
+                routes.MapRoute(
+                    name: "ankieta",
+                    template: "Ankieta/{code?}",
+                    defaults: new {controller="Home", action="StartQuestionnarie"});
+                  
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

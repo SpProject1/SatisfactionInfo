@@ -2,13 +2,15 @@
 @{
     ViewData["Title"] = "Ankieta";
     string name = Model == null ? null : Model.Name;
-    int questionNumber = Model.Questions.Count;   
+    int questionNumber = Model.Questions.Count;
 }
 <div id="questionnarieContent">
     @if (Model != null)
     {
         <div class="center"><h2>@name</h2></div>
-        <div class="section_content">@Model.Description</div>
+        <div class="section_content">
+            <pre style="white-space: pre-wrap;">@Model.Description</pre>
+        </div>
         @if (Model.Questions != null && Model.Questions.Count > 0)
         {
             <input type="hidden" id="questionnarieCode" value="@Model.Code" />
@@ -19,7 +21,7 @@
             </script>
             <div class="contentRow">
                 @foreach (var question in Model.Questions.OrderBy(a => a.QuestionNumber))
-                {                     
+                {
                     questionNumber = question.QuestionNumber;
                     <script>
                         questions.value += '@questionNumber;'
@@ -32,10 +34,10 @@
                             {
                                 <div class="text_center">
                                     @foreach (var answer in question.AnswersDTOs)
-                                    { 
-                                    <div class="answer">                                         
-                                        <label><input onclick="updateTempAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', null)" type="radio" name="q_@question.Id" value="@answer.Answer" /> @answer.Answer</label>
-                                    </div>
+                                    {
+                                        <div class="answer">
+                                            <label><input onclick="updateTempAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', null)" type="radio" name="q_@question.Id" value="@answer.Answer" /> @answer.Answer</label>
+                                        </div>
                                     }
                                 </div>
                             }
@@ -45,7 +47,6 @@
                                     @foreach (var answer in question.AnswersDTOs)
                                     {
                                         <div class="answer">
-
                                             <label><input type="checkbox" onchange="updateTempAnswer(@questionNumber, '@question.AnswerType', '@answer.Answer', this)" value="@answer.Answer" /> @answer.Answer</label>
                                         </div>
 
@@ -59,7 +60,7 @@
                                     @foreach (var answer in question.AnswersDTOs)
                                     {
                                         <div>
-                                            <input min="0" id="numericAnswer_@questionNumber" oninput="updateSimlpeAnswer(@questionNumber, '#numericAnswer_@questionNumber')" class="input_number" type="number" />
+                                            <label><input min="0" id="numericAnswer_@questionNumber" oninput="updateSimlpeAnswer(@questionNumber, '#numericAnswer_@questionNumber')" class="input_number" type="number" /> @answer.Answer</label>
                                         </div>
                                     }
                                 </div>
@@ -67,7 +68,7 @@
                             else if (question.AnswerType.ToLower() == "opisowy")
                             {
                                 <textarea id="descriptionAnswer_@questionNumber" oninput="updateSimlpeAnswer(@questionNumber, '#descriptionAnswer_@questionNumber')" rows="4" class="input_txt textareaMax"> </textarea>
-                            } 
+                            }
                             @if (question.AddWhy == true)
                             {
                                 <hr />

@@ -7,42 +7,41 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SatisfactionInfo.Models.DAL.SQL;
+using SatisfactionInfo.Models.DTO;
+using SatisfactionInfo.Models.Repo.Interfaces;
 
 namespace SatisfactionInfo.Controllers
 {
     [Authorize]
     public class AnswersController : Controller
     {
-        private readonly SatisfactionInfoContext _context;
+        private readonly IAnswersRepo _repo;
 
-        public AnswersController(SatisfactionInfoContext context)
+        public AnswersController(IAnswersRepo repo)
         {
-            _context = context;
-        }        
+            _repo = repo;
+        }
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Answers.OrderByDescending(a => a.Id).ToListAsync());
+            return View(await _repo.GetList());
         }
         [HttpPost]
-        public async Task<IActionResult> AddOrUpdate(Answers item)
+        public async Task<IActionResult> AddOrUpdate(AnswersDTO item)
         {
             if (ModelState.IsValid)
             {
-                if (item.Id > 0)                
-                    _context.Update(item);                
+                if (item.Id > 0)
+                    await _repo.Update(item);
                 else
-                    _context.Add(item);
-                await _context.SaveChangesAsync();
-                return PartialView("_Answers", await _context.Answers.OrderByDescending(a => a.Id).ToListAsync());
+                    await _repo.Add(item);                
+                return PartialView("_Answers", await _repo.GetList());
             }
             return Content("Wypełnij wymagane pole");
         }
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
-        {
-            var answers = await _context.Answers.FindAsync(id);
-            _context.Answers.Remove(answers);
-            await _context.SaveChangesAsync();
+        {            
+            await _repo.Delete(id);
             return Content("success");
         }
     }

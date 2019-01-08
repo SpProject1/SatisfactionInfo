@@ -2,26 +2,32 @@
 
 @foreach (var questionnarie in Model)
 {
-<tr>
-    <td>
-        <a id="rowToggle_@questionnarie.Id" href="#" class="fa fa-2x fa-angle-down text_def" onclick="toggleRow('#row_questions_@questionnarie.Id','#rowToggle_@questionnarie.Id')"></a>
-    </td>
-    <td>@questionnarie.Name</td>
-    <td>@questionnarie.Description</td>
-    <td>@questionnarie.Code</td>
-    <td>@questionnarie.Date</td>
-    <td>
-        <p class="displayHref" dis>
-            <a asp-controller="UserQuestionnaries"
-               asp-action="_QuestionnariesToPrint"
-               asp-route-id="@questionnarie.Id"
-               asp-protocol="https">Do wydruku</a>
-        </p>
-    </td>
-</tr>
+    string shortDescription = questionnarie.Description != null && questionnarie.Description.Length > 20 ? $"{questionnarie.Description.Substring(0, 20)}..." : questionnarie.Description;
+    <tr>
+        <td>
+            <a id="rowToggle_@questionnarie.Id" href="#" class="fa fa-2x fa-angle-down text_def" onclick="toggleRow('#row_questions_@questionnarie.Id','#rowToggle_@questionnarie.Id')"></a>
+        </td>
+        <td>@questionnarie.Name</td>
+        <td title="@questionnarie.Description">@shortDescription</td>
+        <td>@questionnarie.Code</td>
+        <td>@questionnarie.Date</td>
+        <td>
+            <p class="displayHref" dis>
+                <a asp-controller="UserQuestionnaries"
+                   asp-action="_QuestionnariesToPrint"
+                   asp-route-id="@questionnarie.Id"
+                   asp-protocol="https">Do wydruku</a>
+            </p>
+        </td>
+    </tr>
     <tr id="row_questions_@questionnarie.Id" class="hidden">
         <td colspan="6">
-            <partial name="_QuestionnariesToPrint" model="questionnarie" />             
+            <partial name="_QuestionnariesToPrint" model="questionnarie" />
         </td>
     </tr>
 }
+<tr>
+    <td colspan="6">
+        <ul page-model="@ViewBag.PageInfo" page-action="Index" page-item-css="" page-link-css="button_def" class="pagination"></ul>
+    </td>
+</tr>

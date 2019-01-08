@@ -6,16 +6,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TagHelpers;
 
 namespace SatisfactionInfo.Models.Repo.SQL
 {
     public class UserQuestionnariesRepo : IUserQuestionnariesRepo
     {
-        private readonly SatisfactionInfoContext db;       
-
+        private readonly SatisfactionInfoContext db;
+        const int pageSize = 25;
+        public PageInfo PageInfo { get; set; }
         public UserQuestionnariesRepo(SatisfactionInfoContext db)
         {
-            this.db = db;           
+            this.db = db;
+            PageInfo = new PageInfo();
         }
         public async Task Add(UserQuestionnariesDTO item)
         {
@@ -83,8 +86,8 @@ namespace SatisfactionInfo.Models.Repo.SQL
                         AnswerType = q.AnswerType,
                         AvailableAnswers = q.AvailableAnswers,
                         Answered = item.Answered,
-                        AddWhyBody = item.AddWhyBody                        
-                    });                           
+                        AddWhyBody = item.AddWhyBody
+                    });
                 });
                 await Add(userQuestionnarie.UserQuestionnarie);
                 return "success";
@@ -93,9 +96,9 @@ namespace SatisfactionInfo.Models.Repo.SQL
             {
                 return exe.Message;
             }
-        }  
+        }
         public async Task<UserQuestionnariesDTO> Get(int id)
-        {           
+        {
             var result = await db.UserQuestionnaries
                 .Where(a => a.Id == id)
                 .Select(b => new UserQuestionnariesDTO
@@ -151,10 +154,11 @@ namespace SatisfactionInfo.Models.Repo.SQL
             return result;
         }
 
-        public async Task<List<UserQuestionnariesDTO>> GetList(string code = null, string name = null, DateTime? date = null, string description = null)
+        public async Task<List<UserQuestionnariesDTO>> GetList(int page, string code = null, string name = null, DateTime? date = null, string description = null)
         {
-            var toRemove = new List<UserQuestionnariesDTO>();            
-            var result = await db.UserQuestionnaries
+            page = page < 1 ? 1 : page;
+            var toRemove = new List<UserQuestionnariesDTO>();
+            var result = db.UserQuestionnaries
             .Select(b => new UserQuestionnariesDTO
             {
                 Code = b.Code,
@@ -176,7 +180,14 @@ namespace SatisfactionInfo.Models.Repo.SQL
                     AddWhyBody = a.AddWhyBody,
                     AddWhyName = a.AddWhyName
                 }).Where(c => c.UserQuestionnarieId == b.Id).ToList()
-            }).ToListAsync();
+            });
+
+            PageInfo = new PageInfo
+            {
+                CurrentPage = page,
+                ItemPerPage = pageSize,
+                TotalItems = await result.CountAsync()
+            };
 
             if (code != null)
             {
@@ -187,15 +198,26 @@ namespace SatisfactionInfo.Models.Repo.SQL
                 toRemove.AddRange(result.Where(a => !a.Name.ToLower().Contains(name.ToLower())).ToList());
             }
             if (description != null)
-            {              
-                toRemove.AddRange(result.Where(a => a.Description == null || (a.Description != null && !a.Description.ToLower().Contains(description.ToLower()))).ToList());                
+            {
+                toRemove.AddRange(result.Where(a => a.Description == null || (a.Description != null && !a.Description.ToLower().Contains(description.ToLower()))).ToList());
             }
             if (date.HasValue)
-            {                
+            {
                 toRemove.AddRange(result.Where(a => a.Date.Value.Date != date.Value.Date).ToList());
             }
             var excludeIds = new HashSet<int>(toRemove.Select(a => a.Id));
-            return result.Where(a => !excludeIds.Contains(a.Id)).ToList();
+            if (code == null && name == null && description == null && !date.HasValue)
+                return await result
+                  .Skip((page - 1) * PageInfo.ItemPerPage).Take(PageInfo.ItemPerPage)
+                  .OrderByDescending(a => a.Date)
+                  .ToListAsync();
+
+            PageInfo.CurrentPage = 1;
+            PageInfo.ItemPerPage = int.MaxValue;
+            return await result
+                    .Where(a => !excludeIds.Contains(a.Id))
+                    .OrderByDescending(a => a.Date)
+                    .ToListAsync();
         }
 
         public async Task<int> GetQuestionnariesCount(string code)

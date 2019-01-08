@@ -6,30 +6,35 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SatisfactionInfo.Models.DTO;
 using SatisfactionInfo.Models.Repo.Interfaces;
+using TagHelpers;
 
 namespace SatisfactionInfo.Controllers
 {
     [Authorize]
     public class UserQuestionnariesController : Controller
     {
-        private readonly IUserQuestionnariesRepo userQuestionnariesRepo;
+        private readonly IUserQuestionnariesRepo userQuestionnariesRepo;        
 
         public UserQuestionnariesController(IUserQuestionnariesRepo userQuestionnariesRepo)
         {
             this.userQuestionnariesRepo = userQuestionnariesRepo;
         }
-        public async Task<IActionResult> Index()
-        {            
-            return View(await userQuestionnariesRepo.GetList());
+        public async Task<IActionResult> Index(int pageId = 1)
+        {           
+            var model = await userQuestionnariesRepo.GetList(pageId);
+            ViewBag.PageInfo = userQuestionnariesRepo.PageInfo;
+            return View(model);
         }
         public async Task<IActionResult> _QuestionnariesToPrint(int id)
         {
+            ViewBag.ToPrint = true;
             return View(await userQuestionnariesRepo.Get(id));
         }
         [HttpGet]
-        public async Task<IActionResult> GetFiltered(string code, string name, DateTime? date, string description)
+        public async Task<IActionResult> GetFiltered(int pageId, string code, string name, DateTime? date, string description)
         {
-            var model = await userQuestionnariesRepo.GetList(code, name, date, description);
+            var model = await userQuestionnariesRepo.GetList(pageId, code, name, date, description);
+            ViewBag.PageInfo = userQuestionnariesRepo.PageInfo;
             return PartialView("_Questionnaries", model);
         }
     }

@@ -13,9 +13,9 @@ namespace SatisfactionInfo.Models.Repo.SQL
     {
         private readonly SatisfactionInfoContext db;
 
-        public AnswersRepo(SatisfactionInfoContext db)
+        public AnswersRepo(SatisfactionInfoContext _db)
         {
-            this.db = db;
+            this.db = _db;
         }
         public async Task<List<AnswersDTO>> GetList()
         {
@@ -24,7 +24,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
             {
                 Id = answer.Id,
                 Answer = answer.Answer
-            }).ToListAsync();
+            }).OrderByDescending(a => a.Id).ToListAsync();
 
         }
         public async Task<AnswersDTO> Get(int? id)

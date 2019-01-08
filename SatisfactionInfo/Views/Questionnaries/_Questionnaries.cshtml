@@ -54,6 +54,7 @@
         </tr>
         @foreach (var item in Model)
         {
+            string shortDescription = item.Description != null && item.Description.Length > 20 ? $"{item.Description.Substring(0, 20)}..." : item.Description;
             QuestionnarieQuestionsViewModel model = new QuestionnarieQuestionsViewModel { List = item.QuestionnariesQuestion.ToList(), QuestionnarieId = item.Id };
             string isChecked = item.Active == true ? "checked" : "";
         <tr id="row_@item.Id">
@@ -63,9 +64,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
+            <td title="@item.Description">@shortDescription</td>
             <td>
                 @Html.DisplayFor(modelItem => item.Code)
             </td>

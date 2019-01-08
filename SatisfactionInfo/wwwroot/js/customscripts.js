@@ -1,12 +1,7 @@
 ﻿let toDelete = -1; //Jakieś Id do usunięcia .
 
-function clearFilter() {
-    $('#filterName').val(null)
-    $('#filterCode').val(null)
-    $('#filterDate').val(null)
-    $('#filterDescription').val(null)
-    hide('#buttonUpdateFilter') 
-    updateFilter();
+function clearFilter() {    
+    location.href = '/UserQuestionnaries'
 }
 function showUpdateFilter() {
     let name = $('#filterName').val()
@@ -72,7 +67,9 @@ function toggleRow(id, senderId) {
         sender.addClass('fa-angle-down')
         element.addClass('hidden')
     }
-    // element.toggleClass('hidden')
+    $('html, body').animate({
+        scrollTop: $(senderId).offset().top - 150
+    }, 500);
 }
 $(document).ready(function () {
     let questionCount = parseInt($('#questionCount').val())
@@ -641,11 +638,16 @@ function updateFilter() {
     let code = $('#filterCode').val();
     let date = $('#filterDate').val();
     let description = $('#filterDescription').val();
+    if (name == '' && code == '' && date == '' && description == '') {
+        location.href = '/UserQuestionnaries';
+        return;
+    }
     loader()
     $.ajax({
         type: "GET",
         url: '/UserQuestionnaries/GetFiltered',
         data: {
+            page: 1,
             name: name,
             code: code,
             date: date,

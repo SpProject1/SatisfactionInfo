@@ -1,29 +1,28 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace SatisfactionInfo.Models.DAL.SQL
 {
-    public partial class SatisfactionInfoContext : DbContext
+    public partial class SatisfactionInfoContext : IdentityDbContext
     {      
         public SatisfactionInfoContext(DbContextOptions<SatisfactionInfoContext> options)
             : base(options)
         {
         }
-
         public virtual DbSet<Answers> Answers { get; set; }
-        public virtual DbSet<AnswerTypes> AnswerTypes { get; set; }
-        public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<AnswerTypes> AnswerTypes { get; set; }  
         public virtual DbSet<Questionnaries> Questionnaries { get; set; }
         public virtual DbSet<QuestionnariesQuestion> QuestionnariesQuestion { get; set; }
         public virtual DbSet<Questions> Questions { get; set; }
         public virtual DbSet<QuestionsAnswer> QuestionsAnswer { get; set; }
         public virtual DbSet<UserQuestionnarieAnswers> UserQuestionnarieAnswers { get; set; }
         public virtual DbSet<UserQuestionnaries> UserQuestionnaries { get; set; }
-       
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.HasAnnotation("ProductVersion", "2.2.0-preview3-35497");
 
             modelBuilder.Entity<Answers>(entity =>
@@ -44,39 +43,7 @@ namespace SatisfactionInfo.Models.DAL.SQL
                     .HasMaxLength(20)
                     .ValueGeneratedNever();
             });
-
-            modelBuilder.Entity<AspNetUserClaims>(entity =>
-            {
-                entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasMaxLength(450);
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.AspNetUserClaims)
-                    .HasForeignKey(d => d.UserId);
-            });
-
-            modelBuilder.Entity<AspNetUsers>(entity =>
-            {
-                entity.HasIndex(e => e.NormalizedEmail)
-                    .HasName("EmailIndex");
-
-                entity.HasIndex(e => e.NormalizedUserName)
-                    .HasName("UserNameIndex")
-                    .IsUnique()
-                    .HasFilter("([NormalizedUserName] IS NOT NULL)");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Email).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
-
-                entity.Property(e => e.UserName).HasMaxLength(256);
-            });
-
+                        
             modelBuilder.Entity<Questionnaries>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -181,6 +148,7 @@ namespace SatisfactionInfo.Models.DAL.SQL
                     .IsRequired()
                     .HasMaxLength(50);
             });
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

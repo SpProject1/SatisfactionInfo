@@ -1,12 +1,12 @@
 let toDelete = -1; //Jakieś Id do usunięcia .
 
 function clearFilter() {
-    $('#filterName').val(null)
-    $('#filterCode').val(null)
-    $('#filterDate').val(null)
-    $('#filterDescription').val(null)
-    hide('#buttonUpdateFilter') 
-    updateFilter();
+    //$('#filterName').val(null)
+    //$('#filterCode').val(null)
+    //$('#filterDate').val(null)
+    //$('#filterDescription').val(null)
+    //hide('#buttonUpdateFilter')
+    location.href = '/UserQuestionnaries'
 }
 function showUpdateFilter() {
     let name = $('#filterName').val()
@@ -641,11 +641,16 @@ function updateFilter() {
     let code = $('#filterCode').val();
     let date = $('#filterDate').val();
     let description = $('#filterDescription').val();
+    if (name == '' && code == '' && date == '' && description == '') {
+        location.href = '/UserQuestionnaries';
+        return;
+    }
     loader()
     $.ajax({
         type: "GET",
         url: '/UserQuestionnaries/GetFiltered',
         data: {
+            page: 1,
             name: name,
             code: code,
             date: date,

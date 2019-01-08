@@ -22,8 +22,7 @@ namespace SatisfactionInfo.Controllers
         {
             _context = context;
         }
-
-        // GET: Questionnaries
+       
         public async Task<IActionResult> Index()
         {
             ViewData["QuestionId"] = new SelectList(_context.Questions, "Id", "Question");
