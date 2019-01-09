@@ -10,7 +10,7 @@ namespace SatisfactionInfo.Models.Repo.Interfaces
     public interface IUserQuestionnariesRepo
     {
         PageInfo PageInfo { get; set; }
-        Task<List<UserQuestionnariesDTO>> GetList(int page, string code = null, string name = null, DateTime? date = null, string description = null);
+        Task<List<UserQuestionnariesDTO>> GetList(int page, string code = null, string name = null, DateTime? date = null, string description = null, int? pageSizeLocal = null);
         Task<UserQuestionnariesDTO> Get(string code);
         Task<UserQuestionnariesDTO> Get(int id);       
         Task Add(UserQuestionnariesDTO item);

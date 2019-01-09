@@ -57,12 +57,7 @@
                             else if (question.AnswerType.ToLower() == "numeryczny")
                             {
                                 <div class="text_center">
-                                    @foreach (var answer in question.AnswersDTOs)
-                                    {
-                                        <div>
-                                            <label><input min="0" id="numericAnswer_@questionNumber" oninput="updateSimlpeAnswer(@questionNumber, '#numericAnswer_@questionNumber')" class="input_number" type="number" /> @answer.Answer</label>
-                                        </div>
-                                    }
+                                    <input min="0" id="numericAnswer_@questionNumber" oninput="updateSimlpeAnswer(@questionNumber, '#numericAnswer_@questionNumber')" class="input_number" type="number" />
                                 </div>
                             }
                             else if (question.AnswerType.ToLower() == "opisowy")

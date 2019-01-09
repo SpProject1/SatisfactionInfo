@@ -1,4 +1,11 @@
 ﻿@model QuestionnarieQuestionsViewModel
+@{ 
+    int newQuestionNumber = 1;
+    if (Model != null && Model.List !=null && Model.List.Count > 0)
+    {
+        newQuestionNumber = Model.List.Max(a => a.QuestionNumber) + 1;
+    }
+}
 <table id="questions_@Model.QuestionnarieId" class="table">
     <thead>
         <tr>
@@ -21,7 +28,7 @@
         <tr id="addNewQuestion_@Model.QuestionnarieId" class="newRow hidden">
             <td></td>
             <td>
-                <input min="0" id="questionnarieQuestionQuestionNumber_@Model.QuestionnarieId" type="number" class="input_number" />
+                <input min="0" id="questionnarieQuestionQuestionNumber_@Model.QuestionnarieId" type="number" class="input_number" value="@newQuestionNumber" />
             </td>
             <td>
                 <select id="questionnarieQuestionQuestionId_@Model.QuestionnarieId" class="select" asp-items="ViewBag.QuestionId"></select>

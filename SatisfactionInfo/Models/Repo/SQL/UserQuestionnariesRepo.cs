@@ -13,7 +13,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
     public class UserQuestionnariesRepo : IUserQuestionnariesRepo
     {
         private readonly SatisfactionInfoContext db;
-        const int pageSize = 25;
+        const int pageSize = 2;
         public PageInfo PageInfo { get; set; }
         public UserQuestionnariesRepo(SatisfactionInfoContext db)
         {
@@ -154,7 +154,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
             return result;
         }
 
-        public async Task<List<UserQuestionnariesDTO>> GetList(int page, string code = null, string name = null, DateTime? date = null, string description = null)
+        public async Task<List<UserQuestionnariesDTO>> GetList(int page, string code = null, string name = null, DateTime? date = null, string description = null, int? pageSizeLocal = null)
         {
             page = page < 1 ? 1 : page;
             var toRemove = new List<UserQuestionnariesDTO>();
@@ -185,7 +185,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
             PageInfo = new PageInfo
             {
                 CurrentPage = page,
-                ItemPerPage = pageSize,
+                ItemPerPage = pageSizeLocal ?? pageSize,
                 TotalItems = await result.CountAsync()
             };
 

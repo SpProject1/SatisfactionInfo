@@ -28,6 +28,11 @@
 }
 <tr>
     <td colspan="6">
-        <ul page-model="@ViewBag.PageInfo" page-action="Index" page-item-css="" page-link-css="button_def" class="pagination"></ul>
+        <label id="messageForPageSze" class="danger_msg hidden">Wprowadź wartość od 10 do 100</label>
+        <div class="inline">
+            <label for="pageSizeLocal">Ilość na stronie</label>
+            <input class="input_number" type="number" step="1" min="10" max="100" name="pageSizeLocal" id="pageSizeLocal" oninput="changePageSize()" value="@ViewBag.PageInfo.ItemPerPage" />
+            <ul page-model="@ViewBag.PageInfo" page-action="Index" page-item-css="" page-link-css="button_def" class="pagination"></ul>
+        </div>
     </td>
 </tr>

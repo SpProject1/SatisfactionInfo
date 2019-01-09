@@ -50,8 +50,9 @@ namespace TagHelpers
                 TagBuilder a = new TagBuilder("a");
 
                 PageUrlValues["pageId"] = i;
+                PageUrlValues["pageSizeLocal"] = PageModel.ItemPerPage;
 
-                if(PageModel.CurrentPage == i)
+                if (PageModel.CurrentPage == i)
                 {
                     a.Attributes["disabled"] = "disabled";
                     a.AddCssClass("disabledLi");                    

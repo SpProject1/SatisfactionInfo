@@ -19,9 +19,9 @@ namespace SatisfactionInfo.Controllers
         {
             this.userQuestionnariesRepo = userQuestionnariesRepo;
         }
-        public async Task<IActionResult> Index(int pageId = 1)
-        {           
-            var model = await userQuestionnariesRepo.GetList(pageId);
+        public async Task<IActionResult> Index(int pageId = 1,int? pageSizeLocal = null)
+        {
+            var model = await userQuestionnariesRepo.GetList(page: pageId, pageSizeLocal: pageSizeLocal);
             ViewBag.PageInfo = userQuestionnariesRepo.PageInfo;
             return View(model);
         }
