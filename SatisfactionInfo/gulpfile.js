@@ -1,4 +1,4 @@
-﻿///// <binding BeforeBuild='a_copy:libs, b_bundle_js, c_bundle_css, d_compress_js, e_compress_css' />
+﻿/// <binding BeforeBuild='a_copy:libs, b_bundle_js, c_bundle_css, d_compress_js, e_compress_css' />
 const gulp = require('gulp');
 const npmDist = require('gulp-npm-dist');
 const rename = require('gulp-rename');

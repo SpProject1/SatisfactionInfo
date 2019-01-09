@@ -668,6 +668,16 @@ function updateFilter() {
         }
     });  
 }
+
+function changePageSize() {   
+    let pSize = $('#pageSizeLocal').val()
+    if (pSize > 9 && pSize < 101) {
+        location.href = '/UserQuestionnaries/?pageId=1&pageSizeLocal=' + pSize
+    }   
+    else {
+        show('#messageForPageSze')        
+    }
+}
 $('document').ready(() => {
     $('#closeMsg').on('click', toggleInfo);     
 });

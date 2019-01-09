@@ -13,7 +13,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
     public class UserQuestionnariesRepo : IUserQuestionnariesRepo
     {
         private readonly SatisfactionInfoContext db;
-        const int pageSize = 2;
+        const int pageSize = 20;
         public PageInfo PageInfo { get; set; }
         public UserQuestionnariesRepo(SatisfactionInfoContext db)
         {

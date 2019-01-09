@@ -431,6 +431,7 @@ a:hover {
   list-style-type: none;
   margin: 0;
   padding: 20px;
+  display: inline;
 }
 
 .pagination > li {
