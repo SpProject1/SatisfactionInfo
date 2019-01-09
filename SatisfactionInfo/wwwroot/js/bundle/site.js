@@ -1,11 +1,6 @@
 let toDelete = -1; //Jakieś Id do usunięcia .
 
-function clearFilter() {
-    //$('#filterName').val(null)
-    //$('#filterCode').val(null)
-    //$('#filterDate').val(null)
-    //$('#filterDescription').val(null)
-    //hide('#buttonUpdateFilter')
+function clearFilter() {    
     location.href = '/UserQuestionnaries'
 }
 function showUpdateFilter() {
@@ -72,7 +67,9 @@ function toggleRow(id, senderId) {
         sender.addClass('fa-angle-down')
         element.addClass('hidden')
     }
-    // element.toggleClass('hidden')
+    $('html, body').animate({
+        scrollTop: $(senderId).offset().top - 150
+    }, 500);
 }
 $(document).ready(function () {
     let questionCount = parseInt($('#questionCount').val())

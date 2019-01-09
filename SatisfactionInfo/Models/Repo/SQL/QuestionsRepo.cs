@@ -143,7 +143,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
 
         public async Task DeleteQuestionAnswer(QuestionsAnswerDTO item)
         {
-            var questionAnswer = item != null ? await db.QuestionsAnswer.Where(a => a.AnswerId == item.AnswerId && a.QuestionId == a.QuestionId).FirstOrDefaultAsync() : null;
+            var questionAnswer = item != null ? await db.QuestionsAnswer.Where(a => a.QuestionId == item.QuestionId && a.AnswerId == item.AnswerId).FirstOrDefaultAsync() : null;
             if (questionAnswer != null)
             {
                 db.Entry(questionAnswer).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
