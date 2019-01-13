@@ -59,14 +59,14 @@ namespace SatisfactionInfo.Models.Repo.SQL
                 var userQuestionnarie = await GetFull(answers.First().Code);
                 if (userQuestionnarie.Active != true)
                 {
-                    return "Ta ankieta jest już nieaktywna, skontaktuj sie z administratorem.";
+                    return "Ta ankieta jest już nieaktywna, skontaktuj się z administratorem.";
                 }
                 int questionariesCount = await GetQuestionnariesCount(answers.First().Code);
                 if (questionariesCount > userQuestionnarie.MaxAnswers)
                 {
-                    return "Za duzo odpowiedzi dla aktualej ankiety, skontaktuj sie z administratorem.";
+                    return "Za dużo odpowiedzi dla aktualej ankiety, skontaktuj się z administratorem.";
                 }
-                //usuwanie nie potrzebnego
+                //usuwanie niepotrzebnego
                 var toRemove = answers.Where(a => !userQuestionnarie.Questions.Any(q => q.QuestionNumber.ToString() == a.QuestionNumber)).ToList();
                 toRemove.ForEach(a => answers.Remove(a));
 
@@ -233,12 +233,12 @@ namespace SatisfactionInfo.Models.Repo.SQL
             }
             if (questionnarie != null && questionnarie.Active != true)
             {
-                return new FullQuestionnarieDTO { ErrorMessage = "Ta ankieta jest już nieaktywna, skontaktuj sie z administratorem." };
+                return new FullQuestionnarieDTO { ErrorMessage = "Ta ankieta jest już nieaktywna, skontaktuj się z administratorem." };
             }
             int questionariesCount = await db.UserQuestionnaries.Where(a => a.Code.ToLower() == code.ToLower()).CountAsync();
             if (questionariesCount > questionnarie.MaxAnswers)
             {
-                return new FullQuestionnarieDTO { ErrorMessage = $"Za duzo odpowiedzianych ankiet (kod: {code}), skontaktuj sie z administratorem." };
+                return new FullQuestionnarieDTO { ErrorMessage = $"Za dużo odpowiedzianych ankiet (kod: {code}), skontaktuj się z administratorem." };
             }
             if (questionnarie != null)
             {
