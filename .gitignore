@@ -260,3 +260,5 @@ paket-files/
 __pycache__/
 *.pyc
 /SatisfactionInfo/Data/ankiety.db
+/SatisfactionInfo/Properties/PublishProfiles
+/SatisfactionInfo/Data

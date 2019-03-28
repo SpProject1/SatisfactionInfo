@@ -26,7 +26,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
             {
                 Name = item.Name,
                 Code = item.Code,
-                Date = $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}",
+                Date = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}",
                 Description = item.Description
             };
             await db.UserQuestionnaries.AddAsync(dbItem);
