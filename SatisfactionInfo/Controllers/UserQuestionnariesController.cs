@@ -31,7 +31,7 @@ namespace SatisfactionInfo.Controllers
             return View(await userQuestionnariesRepo.Get(id));
         }
         [HttpGet]
-        public async Task<IActionResult> GetFiltered(int pageId, string code, string name, DateTime? date, string description)
+        public async Task<IActionResult> GetFiltered(int pageId, string code, string name, string date, string description)
         {
             var model = await userQuestionnariesRepo.GetList(pageId, code, name, date, description);
             ViewBag.PageInfo = userQuestionnariesRepo.PageInfo;

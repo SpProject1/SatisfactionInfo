@@ -22,7 +22,10 @@ namespace SatisfactionInfo.Controllers
         }
         public IActionResult Index(InfoDTO info = null)
         {
+            ViewBag.HideInput = false;
             ViewBag.Info = info;
+            if (info != null && info.Type == InfoDTO.InfoType.Success)           
+                ViewBag.HideInput = true;            
             return View();
         }
         public async Task<IActionResult> StartQuestionnarie(QuestionnareCodeDTO item)

@@ -26,7 +26,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
             {
                 Name = item.Name,
                 Code = item.Code,
-                Date = DateTime.Now,
+                Date = $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}",
                 Description = item.Description
             };
             await db.UserQuestionnaries.AddAsync(dbItem);
@@ -154,7 +154,7 @@ namespace SatisfactionInfo.Models.Repo.SQL
             return result;
         }
 
-        public async Task<List<UserQuestionnariesDTO>> GetList(int page, string code = null, string name = null, DateTime? date = null, string description = null, int? pageSizeLocal = null)
+        public async Task<List<UserQuestionnariesDTO>> GetList(int page, string code = null, string name = null, string date = null, string description = null, int? pageSizeLocal = null)
         {
             page = page < 1 ? 1 : page;
             var toRemove = new List<UserQuestionnariesDTO>();
@@ -201,13 +201,13 @@ namespace SatisfactionInfo.Models.Repo.SQL
             {
                 toRemove.AddRange(result.Where(a => a.Description == null || (a.Description != null && !a.Description.ToLower().Contains(description.ToLower()))).ToList());
             }
-            if (date.HasValue)
+            if (date != null)
             {
-                toRemove.AddRange(result.Where(a => a.Date.Value.Date != date.Value.Date).ToList());
+                toRemove.AddRange(result.Where(a => !a.Date.Contains(date)).ToList());
             }
-            var excludeIds = new HashSet<int>(toRemove.Select(a => a.Id));
-            if (code == null && name == null && description == null && !date.HasValue)
-                return await result
+            var excludeIds = new HashSet<int>(toRemove.Select(a => a.Id));           
+            if (code == null && name == null && description == null && date == null)            
+             return await result
                   .Skip((page - 1) * PageInfo.ItemPerPage).Take(PageInfo.ItemPerPage)
                   .OrderByDescending(a => a.Date)
                   .ToListAsync();

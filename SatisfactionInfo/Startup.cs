@@ -35,10 +35,13 @@ namespace SatisfactionInfo
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
-            });          
+            });
 
+            //services.AddDbContext<SatisfactionInfoContext>(options =>
+            //   options.UseSqlServer(
+            //       Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<SatisfactionInfoContext>(options =>
-               options.UseSqlServer(
+               options.UseSqlite(
                    Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<IdentityUser>()
@@ -50,7 +53,7 @@ namespace SatisfactionInfo
             services.AddTransient<IQuestionsRepo, QuestionsRepo>();
             services.AddTransient<IUserQuestionnariesRepo, UserQuestionnariesRepo>(); 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);             
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);             
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

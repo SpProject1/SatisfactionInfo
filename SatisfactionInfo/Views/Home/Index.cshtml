@@ -2,11 +2,14 @@
 @{
     ViewData["Title"] = "";
 }
+@if (ViewBag.HideInput != null && !(bool)ViewBag.HideInput)
+{
+    <div id="codeContent" class="center">
+        <form asp-action="StartQuestionnarie">
+            <label asp-for="Code">Wprowadź kod ankiety:</label> <br />
+            <input asp-for="Code" class="input_txt" />
+            <button onclick="loader()" type="submit" class="button_def">Przejdź do ankiety</button>
+        </form>
+    </div>
+}
 
-<div class="center">  
-    <form asp-action="StartQuestionnarie">
-        <label asp-for="Code">Wprowadź kod ankiety:</label> <br />
-        <input asp-for="Code" class="input_txt" />
-        <button onclick="loader()" type="submit" class="button_def">Przejdź do ankiety</button>
-    </form>
-</div>
